@@ -39,7 +39,7 @@ def rev_complement(seq):
     rev_seq = seq[::-1]
     list_seq = list(rev_seq)
     rev_comp = []
-    for i, char in enumerate(list_seq):
+    for char in list_seq:
         if char == 'A':
             rev_comp = np.append(rev_comp, 'T')
         elif char == 'G':
@@ -68,12 +68,21 @@ def main():
     # T2.a
     msf = args.file_one
     file_out='gene_seq_out.fasta'
+    msf2 = args.file_two
+    names, seqs = read_file(msf)  
+    names2, seqs2 = read_file(msf2)     
 
-    names, seqs = read_file(msf)       
-    print(names)      
-    print(seqs[-1])
-    print(rev_complement(seqs[-1]))
-            
+    print(names)
+    print(seqs.shape)      
+    print(np.expand_dims(seqs, axis=0))
+    # Man kann einzelne Buchstaben ausgeben lassen!
+    print(np.expand_dims(seqs, axis=0)[-1][-1])
+
+    #print(seqs[0,0] == 'A')
+    #print(rev_complement(seqs[-1]))
+    for seq in np.asarray(list(seqs)):
+        list_seq = np.asarray(list(seq))
+        print(np.sum(list_seq=='A'))
     # with open(file_out, 'w') as f_out:   
     #     f_out.write(">" + name + "\n" + seq + "\n")         
         
