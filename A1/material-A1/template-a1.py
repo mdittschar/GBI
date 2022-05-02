@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 
 
 def create_parser():
@@ -17,13 +18,69 @@ def create_parser():
 
     return(p.parse_args())
 
+# aus dem Internet kopiert, noch ändern!
+def read_fasta(fp):
+    name, seq = None, []
+    for line in fp:
+        line = line.rstrip()
+        if line.startswith(">"):
+            if name: yield (name, ''.join(seq))
+            name, seq = line, []
+        else:
+            seq.append(line)
+    if name: yield (name, ''.join(seq))
+
+def fasta_len(seq):
+    print(len(seq))
+    return len(seq)
+
+def rev_complement(seq):
+    
+    rev_seq = seq[::-1]
+    list_seq = list(rev_seq)
+    rev_comp = []
+    for i, char in enumerate(list_seq):
+        if char == 'A':
+            rev_comp = np.append(rev_comp, 'T')
+        elif char == 'G':
+            rev_comp = np.append(rev_comp, 'C')
+        elif char == 'T':
+            rev_comp = np.append(rev_comp, 'A')
+        elif char == 'C':
+            rev_comp = np.append(rev_comp, 'G')
+
+    return ''.join(rev_comp)
+
+def read_file(msf):
+    names = []
+    seqs = []
+    with open(msf) as fp:
+        for name, seq in read_fasta(fp):
+            seqs = np.append(seqs, seq)
+            names = np.append(names, name)
+    return names, seqs
+
 
 def main():
     '''
     The main function should contain all functions that solved the stated tasks. 
     '''
     # T2.a
+    msf = args.file_one
+    file_out='gene_seq_out.fasta'
 
+    names, seqs = read_file(msf)       
+    print(names)      
+    print(seqs[-1])
+    print(rev_complement(seqs[-1]))
+            
+    # with open(file_out, 'w') as f_out:   
+    #     f_out.write(">" + name + "\n" + seq + "\n")         
+        
+        
+
+        
+    
     # T3
 
     # pass is used when a function is not completely difened.
@@ -40,4 +97,5 @@ if __name__ == "__main__":
 
         main()
     except:
-        print('Try:  python3 template-a1.py -f1 MultipleSeqs.fasta -f2 msa-scoring-matrix.fasta')
+        print('Try:  python template-a1.py -f1 MultipleSeqs.fasta -f2 msa-scoring-matrix.fasta')
+
