@@ -94,6 +94,69 @@ def main():
 
     # pass is used when a function is not completely difened.
     # Remove it once you have started with the assignnment.
+
+    from itertools import combinations_with_replacement
+
+    s1= "AAABCAABBC"
+    s2= "ABABCBABBB"
+    s3= "AACBCCABBA"
+    #convert to list
+    seq1= list(s1)
+    seq2= list(s2)
+    seq3= list(s3)
+    
+    #Add to one sequence
+    seqs= seq1+seq2+seq3
+    
+    print(len(seqs))
+    #print(len(seq3))
+    #print(seqs)
+
+    unique = dict(zip(seqs,[seqs.count(i) for i in seqs]))
+    print(unique)
+
+    unique_val= np.unique(np.array(list(seqs)))
+
+    combis= (list(combinations_with_replacement(unique_val, 2))) 
+    combis= np.array(combis)
+    seqs_matrix= [seq1, seq2, seq3]
+    seqs_matrix= np.array(seqs_matrix)
+
+    combi_counts=dict()
+    for combi in range (len(combis)):
+        count = 0
+        for row in np.arange(seqs_matrix.shape[0]-1):
+            for column in np.arange(seqs_matrix.shape[1]):
+                c = ()
+                c0= seqs_matrix[row,column]
+                c1= seqs_matrix[row+1,column]
+                cc= [[c0,c1]]
+                #print(c0,c1)
+                if (combis[combi,0]!= combis[combi,1]):
+                    if (((c0 == combis[combi,0] )& (c1 == combis[combi,1])) | ((c0 == combis[combi,1] )& (c1 == combis[combi,0])) ):
+                        count = count+ len(c1)
+                else:
+                    if ((c0 == combis[combi,0] )& (c1 == combis[combi,1])):
+                        if (row>0):
+                            count = count+ len(c1)   
+                        else:
+                            count = count+ len(c0)+ len(c1)
+        #print("Looking for", combis[combi,:], "counts: ", count)
+        combi_counts[(np.array_str(combis[combi,:]))] = count
+    print(combi_counts)
+
+    import math
+    S =np.empty((len(unique_val),len(unique_val)))
+    combi_counts_keys= list(combi_counts.keys())
+    unique_counts_keys = list(unique.keys())
+    S[0,0] = math.log2((combi_counts[combi_counts_keys[0]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[0]]/len(seqs))))
+    S[0,1] =S[1,0]= math.log2((combi_counts[combi_counts_keys[1]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[1]]/len(seqs))))
+    S[1,1] = math.log2((combi_counts[combi_counts_keys[3]]/30)/((unique[unique_counts_keys[1]]/len(seqs))*(unique[unique_counts_keys[1]]/len(seqs))))
+    S[0,2] =S[2,0] = math.log2((combi_counts[combi_counts_keys[2]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
+    S[2,2] = math.log2((combi_counts[combi_counts_keys[5]]/30)/((unique[unique_counts_keys[2]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
+    S[1,2] =S[2,1] = math.log2((combi_counts[combi_counts_keys[4]]/30)/((unique[unique_counts_keys[1]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
+
+
     pass
 
 
