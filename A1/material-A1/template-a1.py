@@ -24,6 +24,13 @@ def create_parser():
 
 
 def get_name_seq(f):
+    '''
+    Seperate names 
+
+    Parameters
+    ----------
+    f:file , (opened file)
+    '''
     name = False
     seq = []
     for line in f:
@@ -38,10 +45,34 @@ def get_name_seq(f):
     if name: yield (name, ''.join(seq))
 
 def fasta_len(seq):
-    print(len(seq))
-    return len(seq)
+    '''
+    Calculates the length of a sequence
+
+    Parameters
+    ----------
+    seq: list or np.array, (sequence)
+
+    Returns
+    ----------
+    lenght: int
+    '''
+    length= len(seq)
+    print(length)
+    return length
 
 def rev_complement(seq):
+    '''
+    Generate reverse compliment of a sequence
+
+    Parameters
+    ----------
+    seq: list or np.arry, (sequence)
+
+    Returns
+    ----------
+    rev_comps: list, (n_revered compliment bases)
+
+    '''
     
     rev_seq = seq[::-1]
     list_seq = list(rev_seq)
@@ -55,10 +86,24 @@ def rev_complement(seq):
             rev_comp = np.append(rev_comp, 'A')
         elif char == 'C':
             rev_comp = np.append(rev_comp, 'G')
-
-    return ''.join(rev_comp)
+    rev_comp_seq= ''.join(rev_comp)
+    return rev_comp_seq
 
 def read_file(msf):
+    '''
+    describt
+
+    Parameters
+    ----------
+    msf: file, (fasta file)
+
+    Returns
+    ----------
+    names: np.array, (n_sequence names)
+    seqs: np.array, (n_sequences)
+    seqs_list: list, (sequence)
+    '''
+
     try:
         names = []
         seqs_list = []
@@ -75,6 +120,15 @@ def read_file(msf):
 
 
 def write_file(path, names, seqs):
+    '''
+    write a file
+
+    Parameters
+    ----------
+    path: string, (name of file)
+    names: np.array (sequence names)
+    seqs: np.array (sequences)
+    '''
     with open(path, 'w') as f_out:
         for name, seq in zip(names, seqs):
 
@@ -82,6 +136,20 @@ def write_file(path, names, seqs):
 
 
 def get_combinations(seqs2, names2):
+    '''
+    Get and count all possible combinations, and single values in sequence
+
+    Parameters
+    ----------
+    seqs2: #TOOOO DOOOO
+    names2:#TOOOO DOOOO
+
+    Returns
+    ----------
+    combi_counts: dic, (combi, count) 
+    unique: dic, (c, count)
+
+    '''
     n=int(len(seqs2)/len(names2))
 
     seqs_matrix=[seqs2[i:i + n] for i in range(0, len(seqs2), n)]
@@ -105,10 +173,10 @@ def get_combinations(seqs2, names2):
             for row in np.arange(seqs_matrix.shape[0]-1):
                 for compare in np.arange(row, seqs_matrix.shape[0]):
                     if compare != row: 
-                        c = ()
+                        #c = ()
                         c0= seqs_matrix[row,column]
                         c1= seqs_matrix[compare,column]
-                        cc= [[c0,c1]]
+                        #cc= [[c0,c1]]
                         if (combis[combi,0]!= combis[combi,1]):
                             if (((c0 == combis[combi,0]) & (c1 == combis[combi,1])) | ((c0 == combis[combi,1]) & (c1 == combis[combi,0]))):
                                 count = count + 1
@@ -123,6 +191,20 @@ def get_combinations(seqs2, names2):
     return combi_counts, unique
 
 def compute_sub_matrix(combi_counts, unique, seqs2_list):
+    '''
+    Calculate Substitution Matrice
+
+    Parameters
+    ----------
+    combi_counts: dic, (combi, count) 
+    unique: dic, (c, count)
+    seqs2_list: list , (sequences)
+
+    Returns
+    ----------
+    df: pd.Dataframe, (nxn_matrix)
+
+    '''
     seq_len = len(seqs2_list)
     print("Sequence length total: ", seq_len)
     
@@ -131,7 +213,6 @@ def compute_sub_matrix(combi_counts, unique, seqs2_list):
     print("No of all combis: ", no_all_combis)
     for key in combi_counts.keys():
         count1 = key[2:3]
-        print(key)
         count2 = key[6:7]
         val = (combi_counts[key]/no_all_combis)/((unique[count1]/seq_len)*(unique[count2]/seq_len))
         if val ==0:
@@ -158,19 +239,10 @@ def main():
     names, seqs, seqs_list = read_file(msf)  
     names2, seqs2, seqs2_list= read_file(msf2)     
     write_file(path=file_out, names=names, seqs=seqs)
-    # seq1 = 'AAABCAABBC'
-    # seq2 = 'ABABCBABBB'
-    # seq3 = 'AACBCCABBA'
-
-    # seqs2_list = seq1 + seq2 + seq3
-    # seqs2_list = list(seqs2_list)
     combi_counts, unique = get_combinations(seqs2_list, names2)
     matrix = compute_sub_matrix(combi_counts, unique, seqs2_list)
     print("Substitution matrix: \n", matrix)
     matrix_to_txt(matrix, path="matrix.txt")
-    
-
-
     
 
 
