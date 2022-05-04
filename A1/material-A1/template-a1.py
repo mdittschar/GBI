@@ -131,6 +131,7 @@ def compute_sub_matrix(combi_counts, unique, seqs2_list):
     print("No of all combis: ", no_all_combis)
     for key in combi_counts.keys():
         count1 = key[2:3]
+        print(key)
         count2 = key[6:7]
         val = (combi_counts[key]/no_all_combis)/((unique[count1]/seq_len)*(unique[count2]/seq_len))
         if val ==0:
