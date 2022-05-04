@@ -80,7 +80,6 @@ def write_file(path, names, seqs):
 
             f_out.write(">" + name + "\n" + seq + "\n")
 
-#do not forget to close it
 
 def get_combinations(seqs2, names2):
     n=int(len(seqs2)/len(names2))
@@ -123,19 +122,22 @@ def get_combinations(seqs2, names2):
     
     return combi_counts, unique
 
-def compute_sub_matrix(combi_counts, unique):
-    no_all_combis = sum(combi_counts.values())
+def compute_sub_matrix(combi_counts, unique, seqs2_list):
+    seq_len = len(seqs2_list)
+    print("Sequence length total: ", seq_len)
+    
     df = pd.DataFrame(unique, index=unique.keys())
-
+    no_all_combis = sum(combi_counts.values())
+    print("No of all combis: ", no_all_combis)
     for key in combi_counts.keys():
         count1 = key[2:3]
         count2 = key[6:7]
-        val = combi_counts[key]/((unique[count1]*unique[count2])/no_all_combis)
+        val = (combi_counts[key]/no_all_combis)/((unique[count1]/seq_len)*(unique[count2]/seq_len))
         if val ==0:
             df.loc[count1, count2] = 0
             df.loc[count2, count1] = 0
         else:
-            logval = log2(val)
+            logval = math.log(val,2)
             df.loc[count1, count2] = np.round(logval, 2)
             df.loc[count2, count1] = np.round(logval, 2)
         
@@ -154,10 +156,15 @@ def main():
     msf2 = args.file_two
     names, seqs, seqs_list = read_file(msf)  
     names2, seqs2, seqs2_list= read_file(msf2)     
-    
     write_file(path=file_out, names=names, seqs=seqs)
+    # seq1 = 'AAABCAABBC'
+    # seq2 = 'ABABCBABBB'
+    # seq3 = 'AACBCCABBA'
+
+    # seqs2_list = seq1 + seq2 + seq3
+    # seqs2_list = list(seqs2_list)
     combi_counts, unique = get_combinations(seqs2_list, names2)
-    matrix = compute_sub_matrix(combi_counts, unique)
+    matrix = compute_sub_matrix(combi_counts, unique, seqs2_list)
     print("Substitution matrix: \n", matrix)
     matrix_to_txt(matrix, path="matrix.txt")
     
