@@ -1,8 +1,10 @@
 import argparse
 import numpy as np
 import math
+from math import comb, log2
 from itertools import combinations_with_replacement
-
+import pandas as pd
+from collections import OrderedDict
 
 def create_parser():
     '''
@@ -68,45 +70,13 @@ def get_combinations(seqs2, names2):
 
     seqs_matrix=[seqs2[i:i + n] for i in range(0, len(seqs2), n)]
     seqs_matrix = np.array(seqs_matrix)
-    print("Output list chunks: ", seqs_matrix)
-
-    # seqs_str = ""
-
-    #print(seqs_str)
-    # with open(file_out, 'w') as f_out:   
-    #     f_out.write(">" + name + "\n" + seq + "\n")         
-        
-   
-
-        
+     
     
     # T3
-
-    # pass is used when a function is not completely difened.
-    # Remove it once you have started with the assignnment.
-
+    unique = OrderedDict(sorted(dict(zip(seqs2,[seqs2.count(i) for i in seqs2])).items()))
     
-
-    # s1= "AAABCAABBC"
-    # s2= "ABABCBABBB"
-    # s3= "AACBCCABBA"
-    # #convert to list
-    # seq1= list(s1)
-    # seq2= list(s2)
-    # seq3= list(s3)
-    
-    # # #Add to one sequence
-    # seqs= seq1+seq2+seq3
-    
-    
-    # #print(len(seq3))
-    # print("Type of seqs: ", type(seqs))
-
-    unique = dict(zip(seqs2,[seqs2.count(i) for i in seqs2]))
-    #rint("Unique with string: ", unique)
 
     unique_val= np.unique(np.array(list(seqs2)))
-
     combis= (list(combinations_with_replacement(unique_val, 2))) 
     combis= np.array(combis)
     # seqs_matrix= [seq1, seq2, seq3]
@@ -138,9 +108,29 @@ def get_combinations(seqs2, names2):
                         pass
             #print("Looking for", combis[combi,:], "counts: ", count)
         combi_counts[(np.array_str(combis[combi,:]))] = count
-    print(combi_counts)
-    return combi_counts, unique_val
+    
+    return combi_counts, unique
 
+def compute_sub_matrix(combi_counts, unique):
+    no_all_combis = sum(combi_counts.values())
+    df = pd.DataFrame(unique, index=unique.keys())
+
+    for key in combi_counts.keys():
+        count1 = key[2:3]
+        count2 = key[6:7]
+        val = combi_counts[key]/((unique[count1]*unique[count2])/no_all_combis)
+        if val ==0:
+            df.loc[count1, count2] = 0
+            df.loc[count2, count1] = 0
+        else:
+            logval = log2(val)
+            df.loc[count1, count2] = np.round(logval, 2)
+            df.loc[count2, count1] = np.round(logval, 2)
+        
+    return df
+
+def matrix_to_txt(matrix, path):
+    matrix.to_csv(path, sep='\t', mode='a')
 
 def main():
     '''
@@ -152,33 +142,15 @@ def main():
     msf2 = args.file_two
     names, seqs = read_file(msf)  
     names2, seqs2 = read_file(msf2)     
-
-    # print("No of names" ,len(names2))     
-    # print("Lenght of seqs: " ,len(seqs2))
-
-    # n=int(len(seqs2)/len(names2))
-
-    # seqs_matrix=[seqs2[i:i + n] for i in range(0, len(seqs2), n)]
-    # seqs_matrix = np.array(seqs_matrix)
+    
+    combi_counts, unique = get_combinations(seqs2, names2)
+    matrix = compute_sub_matrix(combi_counts, unique)
+    print("Substitution matrix: \n", matrix)
+    matrix_to_txt(matrix, path="matrix.txt")
     
 
+
     
-    combi_counts, unique_val = get_combinations(seqs2, names2)
-
-  
-
-    # S =np.empty((len(unique_val),len(unique_val)))
-    # combi_counts_keys= list(combi_counts.keys())
-    # unique_counts_keys = list(unique.keys())
-    # S[0,0] = math.log2((combi_counts[combi_counts_keys[0]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[0]]/len(seqs))))
-    # S[0,1] =S[1,0]= math.log2((combi_counts[combi_counts_keys[1]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[1]]/len(seqs))))
-    # S[1,1] = math.log2((combi_counts[combi_counts_keys[3]]/30)/((unique[unique_counts_keys[1]]/len(seqs))*(unique[unique_counts_keys[1]]/len(seqs))))
-    # S[0,2] =S[2,0] = math.log2((combi_counts[combi_counts_keys[2]]/30)/((unique[unique_counts_keys[0]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
-    # S[2,2] = math.log2((combi_counts[combi_counts_keys[5]]/30)/((unique[unique_counts_keys[2]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
-    # S[1,2] =S[2,1] = math.log2((combi_counts[combi_counts_keys[4]]/30)/((unique[unique_counts_keys[1]]/len(seqs))*(unique[unique_counts_keys[2]]/len(seqs))))
-    # print("S: ", S)
-
-    pass
 
 
 if __name__ == "__main__":
