@@ -58,12 +58,25 @@ def rev_complement(seq):
 def read_file(msf):
     names = []
     seqs_list = []
+    seqs = []
     with open(msf) as fp:
         for name, seq in read_fasta(fp):
-            seq = list(seq)
-            seqs_list = seqs_list +  seq
+
+            seq_list = list(seq)
+            seqs_list = seqs_list +  seq_list
             names = np.append(names, name)
-    return names, seqs_list
+            seqs = np.append(seqs, seq)
+    return names, seqs, seqs_list
+
+def write_file(path, names, seqs):
+    
+
+    with open(path, 'w') as f_out:
+        for name, seq in zip(names, seqs):
+
+            f_out.write(">" + name + "\n" + seq + "\n")
+
+#do not forget to close it
 
 def get_combinations(seqs2, names2):
     n=int(len(seqs2)/len(names2))
@@ -140,10 +153,11 @@ def main():
     msf = args.file_one
     file_out='gene_seq_out.fasta'
     msf2 = args.file_two
-    names, seqs = read_file(msf)  
-    names2, seqs2 = read_file(msf2)     
-    
-    combi_counts, unique = get_combinations(seqs2, names2)
+    names, seqs, seqs_list = read_file(msf)  
+    names2, seqs2, seqs2_list= read_file(msf2)     
+    print(seqs)
+    write_file(path="test.fasta", names=names, seqs=seqs)
+    combi_counts, unique = get_combinations(seqs2_list, names2)
     matrix = compute_sub_matrix(combi_counts, unique)
     print("Substitution matrix: \n", matrix)
     matrix_to_txt(matrix, path="matrix.txt")
