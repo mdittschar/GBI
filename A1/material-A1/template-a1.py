@@ -54,7 +54,8 @@ def fasta_len(seq):
 
     Returns
     ----------
-    lenght: int
+    length: int
+    length of sequence
     '''
     length= len(seq)
     print(length)
@@ -67,16 +68,18 @@ def rev_complement(seq):
     Parameters
     ----------
     seq: list or np.arry, (sequence)
+    Sequence
 
     Returns
     ----------
-    rev_comps: list, (n_revered compliment bases)
-
+    rev_comps: list, (n_reversed_compliment_bases)
+    Reverse compliment sequence
     '''
-    
+    # reverse the sequence
     rev_seq = seq[::-1]
     list_seq = list(rev_seq)
     rev_comp = []
+    # replace by complement
     for char in list_seq:
         if char == 'A':
             rev_comp = np.append(rev_comp, 'T')
@@ -91,7 +94,7 @@ def rev_complement(seq):
 
 def read_file(msf):
     '''
-    describt
+    read sequences from file
 
     Parameters
     ----------
@@ -125,9 +128,9 @@ def write_file(path, names, seqs):
 
     Parameters
     ----------
-    path: string, (name of file)
-    names: np.array (sequence names)
-    seqs: np.array (sequences)
+    path: string, 
+    names: np.array (n_names,)
+    seqs: np.array (n_sequences)
     '''
     with open(path, 'w') as f_out:
         for name, seq in zip(names, seqs):
@@ -141,31 +144,39 @@ def get_combinations(seqs2, names2):
 
     Parameters
     ----------
-    seqs2: #TOOOO DOOOO
-    names2:#TOOOO DOOOO
+    seqs2: list of sequences
+    sequences
+    names2: np.array
+    names
 
     Returns
     ----------
     combi_counts: dic, (combi, count) 
+    Counts for every combbination
     unique: dic, (c, count)
+    probability of single letters
 
     '''
+    # get the length of each sequence
     n=int(len(seqs2)/len(names2))
 
+    # generate a matrix from big list
     seqs_matrix=[seqs2[i:i + n] for i in range(0, len(seqs2), n)]
     seqs_matrix = np.array(seqs_matrix)
      
     
-    # T3
+    # get unique counts
     unique = OrderedDict(sorted(dict(zip(seqs2,[seqs2.count(i) for i in seqs2])).items()))
     
-
+    # get unique letters
     unique_val= np.unique(np.array(list(seqs2)))
+    # generate all possible combinations
     combis= (list(combinations_with_replacement(unique_val, 2))) 
     combis= np.array(combis)
     
     seqs_matrix= np.array(seqs_matrix)
 
+    # for each combination, for each column and row and comparison row, get combinations
     combi_counts=dict()
     for combi in range (len(combis)):
         count = 0
@@ -173,11 +184,10 @@ def get_combinations(seqs2, names2):
             for row in np.arange(seqs_matrix.shape[0]-1):
                 for compare in np.arange(row, seqs_matrix.shape[0]):
                     if compare != row: 
-                        #c = ()
                         c0= seqs_matrix[row,column]
                         c1= seqs_matrix[compare,column]
-                        #cc= [[c0,c1]]
                         if (combis[combi,0]!= combis[combi,1]):
+                            # conditions for letter comparison
                             if (((c0 == combis[combi,0]) & (c1 == combis[combi,1])) | ((c0 == combis[combi,1]) & (c1 == combis[combi,0]))):
                                 count = count + 1
                         else:
@@ -206,15 +216,17 @@ def compute_sub_matrix(combi_counts, unique, seqs2_list):
 
     '''
     seq_len = len(seqs2_list)
-    print("Sequence length total: ", seq_len)
-    
+    # generate dataframe
     df = pd.DataFrame(unique, index=unique.keys())
     no_all_combis = sum(combi_counts.values())
-    print("No of all combis: ", no_all_combis)
+    # get two letters
     for key in combi_counts.keys():
+        # the letters are always at the same position
         count1 = key[2:3]
         count2 = key[6:7]
+        # p(A,B)/(p(A)*p(B))
         val = (combi_counts[key]/no_all_combis)/((unique[count1]/seq_len)*(unique[count2]/seq_len))
+        # put in values
         if val ==0:
             df.loc[count1, count2] = 0
             df.loc[count2, count1] = 0
@@ -226,19 +238,32 @@ def compute_sub_matrix(combi_counts, unique, seqs2_list):
     return df
 
 def matrix_to_txt(matrix, path):
+    """
+    write matrix to text file
+
+    Parameters
+    ----------
+
+    matrix: pd.DataFrame
+    (Substitution) Matrix
+
+    path: string 
+    filepath
+    """
     matrix.to_csv(path, sep='\t', mode='a')
 
 def main():
     '''
     The main function should contain all functions that solved the stated tasks. 
     '''
-    # T2.a
+    # Task 2
     msf = args.file_one
     file_out='seq_out.fasta'
     msf2 = args.file_two
     names, seqs, seqs_list = read_file(msf)  
     names2, seqs2, seqs2_list= read_file(msf2)     
     write_file(path=file_out, names=names, seqs=seqs)
+    # Task 3
     combi_counts, unique = get_combinations(seqs2_list, names2)
     matrix = compute_sub_matrix(combi_counts, unique, seqs2_list)
     print("Substitution matrix: \n", matrix)
