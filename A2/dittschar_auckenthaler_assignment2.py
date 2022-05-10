@@ -185,24 +185,13 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     # reverse the completed alignment strings
     tstring0 = tstring0[::-1]
     tstring1 = tstring1[::-1]
-    
-    display_seq1 = tstring1
-    alignment = np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")
-    print(f"Traceback strings: ")
-    i = 0
-    while i*60 < len(tstring0):
-        display_seq0 = tstring0[i*60:(i+1)*60]
-        display_seq1 = tstring1[i*60:(i+1)*60]
-        display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*60:(i+1)*60])
-        print(f"\n{display_seq0}\n{display_alignment}\n{display_seq1}")
-        i = i + 1
-    
+
     # get the optimal alignment score
     opt_score = S[rows-1, columns-1]
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
     
-def visual_alignment(tstring0, tstring1):
+def visual_alignment(tstring0, tstring1, pair_no=60):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention
 
@@ -210,24 +199,25 @@ def visual_alignment(tstring0, tstring1):
     -----------
         tstring0 (str): aligned string of first sequence
         tstring1 (str): aligned string of second sequence
+        pair_no (int): number of aligned pairs to show in one row
     """
-    # initialise alignment array
-    alignment = np.zeros((len(tstring0), 3)). astype(str)
-    # first row ist first sequence
-    alignment[:,0] = list(tstring0)
-    # match character where matches are present
-    alignment[:,1] = np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", "")
-    # second row is second sequence
-    alignment[:,2] = list(tstring1)
-    # generate Dataframe
-    a_df = pd.DataFrame(alignment.T)
-    # set visualisation parameters to fit a LARGE screen
-    # according to fasta convention display 60 pairs
-    # please adjust display.width if dataframe is not displayed correctly
-    pd.set_option("display.max_columns", len(tstring0))
-    pd.set_option("display.width", 250)
-    pd.set_option("display.max_colwidth", 0)
-    print(a_df)
+    print(f"Traceback strings: ")
+    i = 0
+    seq_lens = len(tstring0)
+    # while
+    while i*pair_no < seq_lens:
+        display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
+        display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
+        display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*pair_no:(i+1)*pair_no])
+        
+        if i*pair_no < seq_lens - pair_no:
+            empty = (pair_no -2)* " "
+            alignment_nos = "".join([str(i*pair_no + 1), empty, str((i+1)*pair_no)])
+        else:
+            empty = " "*(seq_lens - pair_no*i)
+            alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
+        print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
+        i = i + 1
     
 
 
