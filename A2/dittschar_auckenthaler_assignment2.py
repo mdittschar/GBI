@@ -204,18 +204,24 @@ def visual_alignment(tstring0, tstring1, pair_no=60):
     print(f"Traceback strings: ")
     i = 0
     seq_lens = len(tstring0)
-    # while
+    # continue while alignment is not fully visualised yet
     while i*pair_no < seq_lens:
+        # assign strings to be visualised
+        # pair_no is number of pairs to visualise in one row
         display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
         display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
+        # show alignment lines where matches are present
         display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*pair_no:(i+1)*pair_no])
-        
+        # visualisation for full lines
         if i*pair_no < seq_lens - pair_no:
-            empty = (pair_no -2)* " "
+            empty = (pair_no - 2 - i)* " "
+            # numbers at the ends of the lines to show number of pairs
             alignment_nos = "".join([str(i*pair_no + 1), empty, str((i+1)*pair_no)])
         else:
+            # visualisation if there's an incomplete line left
             empty = " "*(seq_lens - pair_no*i)
             alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
+        # print the combined information
         print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
         i = i + 1
     
@@ -225,7 +231,9 @@ def main():
      
     sequences, match, mismatch, gap= get_args()
     print("Length of sequence 1: ",len(sequences[0]))
+    # get matrices and number of rows/columns
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
+    # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
     print("Optimal score: ", opt_score)
     print("Match Number: ", match_no)
