@@ -43,17 +43,13 @@ def compute(sequences, match, mismatch, gap):
     
     str_seq0 = list(str(sequences[0]))
     str_seq1 = list(str(sequences[1]))
-    no_match = 0
-    no_mismatch = 0
     directions = np.array(["diagonal", "left", "up"]).astype(str) # diagonal, left, up
     for column in np.arange(1,columns): 
         for row in np.arange(1,rows): 
             if str_seq0[row- 1] == str_seq1[column- 1]:
-                no_match = no_match + 1
                 vmatch = S[row-1, column-1] + match
             else: 
                 vmatch = S[row-1, column-1] + mismatch
-                no_mismatch = no_mismatch + 1
             vleft = S[row, column-1] - gap
             vup = S[row-1, column] - gap
             values = np.array([vmatch, vleft, vup])
@@ -121,7 +117,7 @@ def visual_alignment(tstring0, tstring1):
     a_df = pd.DataFrame(alignment.T)
     pd.set_option("display.max_columns", len(tstring0))
 
-    pd.set_option("display.width", 200)
+    pd.set_option("display.width", 250)
     pd.set_option("display.max_colwidth", 0)
     
     #_string = a_df.to_string(header=False, index=False)
