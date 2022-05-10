@@ -13,16 +13,19 @@ def get_seqs():
     i = 0
     for opt, arg in opts:
         if opt in ["-a", "--file1", "-b", "--file2"]:
+            print(f"File No {i+1}: {arg}")
             for record in SeqIO.parse(arg, "fasta"):
                 se = record.seq
                 ses[i] = se
-                print("Seq is: ", ses)
                 i = i + 1
         elif opt == "-g" or opt =="--gap":
+            print(f"Gap penalty: {arg}")
             gap = int(arg)
         elif opt == "-m" or opt =="--match":
+            print(f"Match Score: {arg}")
             match = int(arg)
         elif opt == "-s" or opt =="--mismatch":
+            print(f"Mismatch Score: {arg}")
             mismatch = int(arg)
  
     return ses, match, mismatch, gap
@@ -55,7 +58,7 @@ def compute(sequences, match, mismatch, gap):
             vup = S[row-1, column] - gap
             values = np.array([vmatch, vleft, vup])
             vmin = np.max(values)
-            S[row, column ] = vmin
+            S[row, column] = vmin
             direction = directions[np.argmax(values)]
             T[row, column] = direction
 
@@ -105,21 +108,39 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     tstring1 = tstring1[::-1]
     print(f"Traceback strings: \n{tstring0}\n{tstring1}")
 
-    opt_score = T[rows-1, columns-1]
-    return opt_score, match_no, mismatch_no, gap_no
+    opt_score = S[rows-1, columns-1]
+    return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
     
+def visual_alignment(tstring0, tstring1):
+
+    alignment = np.zeros((len(tstring0), 3)). astype(str)
+    alignment[:,0] = list(tstring0)
+    alignment[:,1] = np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", "")
+    alignment[:,2] = list(tstring1)
+    a_df = pd.DataFrame(alignment.T)
+    pd.set_option("display.max_columns", len(tstring0))
+
+    pd.set_option("display.width", 150)
+    pd.set_option("display.max_colwidth", 0)
+    
+    #_string = a_df.to_string(header=False, index=False)
+    print(a_df)
+    
+
 
 def main():
      
     sequences, match, mismatch, gap= get_seqs()
     print("Length of sequence 1: ",len(sequences[0]))
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
-    opt_score, match_no, mismatch_no, gap_no = traceback(S, T, rows, columns, sequences[0], sequences[1])
+    opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
     print("Optimal score: ", opt_score)
     print("Match Number: ", match_no)
     print("Mismatch Number: ", mismatch_no)
     print("Gap Number: ", gap_no)
+    visual_alignment(astring0, astring1)
+
     
 
 
