@@ -6,14 +6,26 @@ import numpy as np
 import pandas as pd
 
 def get_seqs():
-    ses = [None] * (len(sys.argv)-1)
-    for i, val in enumerate(sys.argv[1:]):
-        for record in SeqIO.parse(val, "fasta"):
+    argv = sys.argv[1:]
+    print("Argv: ", argv)
+    opts, args = getopt.getopt(argv, "a:b:m:s:g:", ['file1', 'file2', 'match', 'mismatch', 'gap'])
+    ses = [None] * 2
+    i = 0
+    for opt, arg in opts[:2]:
+        for record in SeqIO.parse(arg, "fasta"):
             se = record.seq
-
             ses[i] = se
-   
-    return ses
+            print("Seq is: ", ses)
+            i = i + 1
+    for opt, arg in opts[1:]:
+        if opt == "-g" or opt =="--gap":
+            gap = int(arg)
+        if opt == "-m" or opt =="--match":
+            match = int(arg)
+        if opt == "-s" or opt =="--mismatch":
+            mismatch = int(arg)
+ 
+    return ses, match, mismatch, gap
 
 def compute(sequences, match, mismatch, gap):
     rows = len(sequences[0]) + 1
@@ -84,9 +96,9 @@ def compute(sequences, match, mismatch, gap):
 
 if __name__ == "__main__":
     
-    sequences = get_seqs()
+    sequences, match, mismatch, gap= get_seqs()
     print("Length of sequence 1: ",len(sequences[0]))
-    compute(sequences, -2, 2, 4)
+    compute(sequences, match, mismatch, gap)
 
 # Needleman-Wunsch
 
