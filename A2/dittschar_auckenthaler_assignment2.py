@@ -121,7 +121,7 @@ def visual_alignment(tstring0, tstring1):
     a_df = pd.DataFrame(alignment.T)
     pd.set_option("display.max_columns", len(tstring0))
 
-    pd.set_option("display.width", 150)
+    pd.set_option("display.width", 200)
     pd.set_option("display.max_colwidth", 0)
     
     #_string = a_df.to_string(header=False, index=False)
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     try:
         main()
     except: 
-        print("Try : dittschar_auckenthaler_assignment2.py --file1 <file1> --file2 <file2> --match <match-score> --mismatch <mismatch-score> --gap <gap-score>")
+        print("Try : python dittschar_auckenthaler_assignment2.py --file1 <file1> --file2 <file2> --match <match-score> --mismatch <mismatch-score> --gap <gap-score>")
 
     
 
