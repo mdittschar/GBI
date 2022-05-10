@@ -1,0 +1,23 @@
+
+1                                                          60
+AAACCCCCCCCGCCGTATTTCCATCGGGGTGCATGAATGCGATTAAGCGGTAAGGC-TA-
+  |    | | || ||  || ||||  ||| |  | |  | || | |  || || |  | 
+CCAGTTTCACGGCTGTGATT-CATC-AGGT-CGCGCA--CCATCAGGAAGT-AGCCACAG
+61                                                         120
+AATATTGGGGGGAATTACACTG-CGACGGCGGTTTTCAGTTGCTGAAGATTATTGATGAT
+||     |  ||  | |   || | |   ||   |||||  | | || ||    |  |  
+AAGCCCAGACGG-GTCAGCGTGTCCATTTCGTACTTCAGACGATCAACATACACGCGGTG
+121                                                        180
+ATAACCTCCCCCTAATCGCTCTCACTAATTATTT-TTATTTATTACAATGGCCGACGAG-
+ | |    ||  |  |   |  | | || | |||  ||  ||  ||  | | || | || 
+CTCAGAAGCCGGTGGTGTGTAGC-CAAACTCTTTGGTA-GTAAGACGCTTG-CG-C-AGC
+181                                                 229
+TTCTTTATAGGCATCATCAATTTTTTTCTTTGC-AG-CTTCT-AC-TCG
+  |   | || || | |||      ||    ||  | | |||  | || 
+CCCGCGACAGCCAGCTTCATCAGCGTTGCAGGCTCGTCGTCTGCCATCT
+Match Score: 2
+Mismatch Score: -2
+Gap Penalty: 4
+Match No.: 106
+Mismatch No.:102
+Gap No.: 21

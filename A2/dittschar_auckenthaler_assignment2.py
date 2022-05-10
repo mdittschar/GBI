@@ -191,55 +191,75 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
     
-def visual_alignment(tstring0, tstring1, pair_no=60):
+def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no, match, mismatch, gap, pair_no=60 ):
     """
-    Generate a visual alignment of two sequences following BLAST-alignment convention
+    Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
+    (TASK 5)
 
     Parameters:
     -----------
         tstring0 (str): aligned string of first sequence
         tstring1 (str): aligned string of second sequence
         pair_no (int): number of aligned pairs to show in one row
+        filename (String): tet.file name 
+        match_no, (int): no. of matches in alignment
+        mismatch_no (int): no of mismatches in alignment
+        gap_no (int):   no. of gaps in alignment 
+        match (int): match-score parameter
+        mismatch (int): mismatch- score parameter
+        gap (int): gap-score parameter
     """
     print(f"Traceback strings: ")
     i = 0
     seq_lens = len(tstring0)
     # continue while alignment is not fully visualised yet
-    while i*pair_no < seq_lens:
-        # assign strings to be visualised
-        # pair_no is number of pairs to visualise in one row
-        display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
-        display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
-        # show alignment lines where matches are present
-        display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*pair_no:(i+1)*pair_no])
-        # visualisation for full lines
-        if i*pair_no < seq_lens - pair_no:
-            empty = (pair_no - 2 - i)* " "
-            # numbers at the ends of the lines to show number of pairs
-            alignment_nos = "".join([str(i*pair_no + 1), empty, str((i+1)*pair_no)])
-        else:
-            # visualisation if there's an incomplete line left
-            empty = " "*(seq_lens - pair_no*i)
-            alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
-        # print the combined information
-        print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
-        i = i + 1
-    
 
+    with open(filename, 'w') as file_out:
+
+        while i*pair_no < seq_lens:
+            # assign strings to be visualised
+            # pair_no is number of pairs to visualise in one row
+            display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
+            display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
+            # show alignment lines where matches are present
+            display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*pair_no:(i+1)*pair_no])
+            # visualisation for full lines
+            if i*pair_no < seq_lens - pair_no:
+                empty = (pair_no - 2 - i)* " "
+                # numbers at the ends of the lines to show number of pairs
+                alignment_nos = "".join([str(i*pair_no + 1), empty, str((i+1)*pair_no)])
+            else:
+                # visualisation if there's an incomplete line left
+                empty = " "*(seq_lens - pair_no*i)
+                alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
+            # print the combined information
+            print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
+            #Task 5 a) write it to textfile
+            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
+        
+            i = i + 1
+        #Task 5 b) and c) write parameter to text file:
+        print("Match Score: ",match)
+        print("Mismatch Score: ", mismatch)
+        print("Gap penalty: ",gap )
+        print("Match No.: ", match_no)
+        print("Mismatch No.: ", mismatch_no)
+        print("Gap No.: ", gap_no) 
+        file_out.write(f"\nMatch Score: {match}\nMismatch Score: {mismatch}\nGap Penalty: {gap}\nMatch No.: {match_no}\nMismatch No.:{mismatch_no}\nGap No.: {gap_no}")
+        file_out.close
+      
 
 def main():
      
     sequences, match, mismatch, gap= get_args()
-    print("Length of sequence 1: ",len(sequences[0]))
+    #print("Length of sequence 1: ",len(sequences[0]))
     # get matrices and number of rows/columns
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
     # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
+    #call function to print and write output of needleman-wunsch
     print("Optimal score: ", opt_score)
-    print("Match Number: ", match_no)
-    print("Mismatch Number: ", mismatch_no)
-    print("Gap Number: ", gap_no)
-    visual_alignment(astring0, astring1)
+    visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", match_no, mismatch_no, gap_no, match, mismatch, gap)
 
     
 
@@ -249,7 +269,7 @@ if __name__ == "__main__":
     try:
         main()
     except: 
-        print("Try : python dittschar_auckenthaler_assignment2.py --file1 <file1> --file2 <file2> --match <match-score> --mismatch <mismatch-score> --gap <gap-score>")
+        print("Try : python dittschar_auckenthaler_assignment2.py -a <file1> -b <file2> -m <match-score> -s <mismatch-score> -g <gap-score>")
 
     
 
