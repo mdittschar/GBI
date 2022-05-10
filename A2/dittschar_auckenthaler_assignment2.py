@@ -252,13 +252,12 @@ def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no,
 def main():
      
     sequences, match, mismatch, gap= get_args()
-    #print("Length of sequence 1: ",len(sequences[0]))
     # get matrices and number of rows/columns
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
     # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
-    #call function to print and write output of needleman-wunsch
     print("Optimal score: ", opt_score)
+    #call function to print and write output of needleman-wunsch
     visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", match_no, mismatch_no, gap_no, match, mismatch, gap)
 
     
