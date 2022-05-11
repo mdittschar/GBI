@@ -134,12 +134,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
         tstring0 (str): string 1 of optimal alignment
         tstring1 (str): string 2 of optimal alignments
     """
-    # matrix = pd.DataFrame(S)
-    # tmatrix = pd.DataFrame(T)
-    # print(matrix)
-    # print(tmatrix)
-    # print("Sequence 0: ", sequence0)
-    # print("Sequence 1: ", sequence1)
+
     # traceback
     # get a characterwise list of the sequences
     str_seq0 = list(str(sequence0))
@@ -256,7 +251,7 @@ def main():
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
     # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
-    print("Optimal score: ", opt_score)
+    print("Optimal alignment score: ", opt_score)
     #call function to print and write output of needleman-wunsch
     visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", match_no, mismatch_no, gap_no, match, mismatch, gap)
 
