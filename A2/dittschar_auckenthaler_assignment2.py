@@ -14,6 +14,8 @@ def get_args():
         ses: list of sequences
         sequences for comparison
 
+        ids: array of sequence id's
+
         match: int
         match score
 
@@ -28,6 +30,7 @@ def get_args():
     # get a tuple of the arguments to use
     opts, _ = getopt.getopt(argv, "a:b:m:s:g:", ['file1', 'file2', 'match', 'mismatch', 'gap'])
     ses = [None] * 2
+    ids = []
     i = 0
     for opt, arg in opts:
         if opt in ["-a", "--file1", "-b", "--file2"]:
@@ -35,7 +38,10 @@ def get_args():
             # use Biopython parser for sequences
             for record in SeqIO.parse(arg, "fasta"):
                 se = record.seq
+                id = record.id
+                #ids [i]= id
                 # append sequences to list
+                ids = np.append(ids, id)
                 ses[i] = se
                 i = i + 1
         # get gap, match and mismatch scores from arguments 
@@ -49,7 +55,7 @@ def get_args():
             print(f"Mismatch Score: {arg}")
             mismatch = int(arg)
  
-    return ses, match, mismatch, gap
+    return ses,ids, match, mismatch, gap
 
 def compute(sequences, match, mismatch, gap):
     """
@@ -186,7 +192,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
     
-def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no, match, mismatch, gap, pair_no=60 ):
+def visual_alignment(tstring0, tstring1,filename, ids, match_no, mismatch_no, gap_no, match, mismatch, gap, pair_no=60 ):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
     (TASK 5)
@@ -197,6 +203,7 @@ def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no,
         tstring1 (str): aligned string of second sequence
         pair_no (int): number of aligned pairs to show in one row
         filename (String): tet.file name 
+        id (): names of sequences
         match_no, (int): no. of matches in alignment
         mismatch_no (int): no of mismatches in alignment
         gap_no (int):   no. of gaps in alignment 
@@ -210,6 +217,7 @@ def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no,
     # continue while alignment is not fully visualised yet
 
     with open(filename, 'w') as file_out:
+        file_out.write(f"\n ID of Sequence 1: {ids[0]} \n ID of Sequence 2: {ids[1]}")
 
         while i*pair_no < seq_lens:
             # assign strings to be visualised
@@ -240,20 +248,21 @@ def visual_alignment(tstring0, tstring1,filename, match_no, mismatch_no, gap_no,
         print("Match No.: ", match_no)
         print("Mismatch No.: ", mismatch_no)
         print("Gap No.: ", gap_no) 
+       
         file_out.write(f"\nMatch Score: {match}\nMismatch Score: {mismatch}\nGap Penalty: {gap}\nMatch No.: {match_no}\nMismatch No.:{mismatch_no}\nGap No.: {gap_no}")
         file_out.close
       
 
 def main():
      
-    sequences, match, mismatch, gap= get_args()
+    sequences,ids, match, mismatch, gap= get_args()
     # get matrices and number of rows/columns
     S, T, rows, columns =  compute(sequences, match, mismatch, gap)
     # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
     print("Optimal alignment score: ", opt_score)
     #call function to print and write output of needleman-wunsch
-    visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", match_no, mismatch_no, gap_no, match, mismatch, gap)
+    visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
 
     
 

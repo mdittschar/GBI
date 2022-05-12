@@ -1,4 +1,6 @@
 
+ ID of Sequence 1: gi|428930884|gb|ADTI01000055.1| 
+ ID of Sequence 2: gi|428930882|gb|ADTI01000057.1|
 1                                                          60
 AAACCCCCCCCGCCGTATTTCCATCGGGGTGCATGAATGCGATTAAGCGGTAAGGC-TA-
   |    | | || ||  || ||||  ||| |  | |  | || | |  || || |  | 
