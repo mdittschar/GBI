@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+"""
+Taken from: 
+
+https://gist.github.com/slowkow/06c6dba9180d013dfd82bec217d22eb5
+
+The Needleman-Wunsch Algorithm
+==============================
+This is a dynamic programming algorithm for finding the optimal alignment of
+two strings.
+Example
+-------
+    >>> x = "GATTACA"
+    >>> y = "GCATGCU"
+    >>> print(nw(x, y))
+    G-ATTACA
+    GCA-TGCU
+LICENSE
+This is free and unencumbered software released into the public domain.
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+For more information, please refer to <http://unlicense.org/>
+"""
+
+import numpy as np
+import argparse
+
+
+def create_parser():
+    '''
+    Creates a argument parser to facilitate file reading.
+
+    '''
+    # Make parser object
+    p = argparse.ArgumentParser(description=__doc__,
+                                formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    p.add_argument('-f1', '--file-one',
+                   help="File for the the programming task")
+
+    return(p.parse_args())
+
+
+def nw(x, y, match=1, mismatch=1, gap=1):
+    """
+    Computation of the Needleman-Wunsch algorith
+
+    Args:
+        x (string): Sequence 1 to align
+        y (string): Sequence 2 to align
+        match (int, optional): Match score. Defaults to 1.
+        mismatch (int, optional): Mismatch score. Defaults to 1.
+        gap (int, optional): Gap penalty. Defaults to 1.
+
+    Returns:
+        string: alignment
+    """
+    nx = len(x)
+    ny = len(y)
+    # Optimal score at each possible pair of characters.
+    F = np.zeros((nx + 1, ny + 1))
+    F[:, 0] = np.linspace(0, -nx, nx + 1)
+    F[0, :] = np.linspace(0, -ny, ny + 1)
+    # Pointers to trace through an optimal aligment.
+    P = np.zeros((nx + 1, ny + 1))
+    P[:, 0] = 3
+    P[0, :] = 4
+    # Temporary scores.
+    t = np.zeros(3)
+    for i in range(nx):
+        for j in range(ny):
+            if x[i] == y[j]:
+                t[0] = F[i, j] + match
+            else:
+                t[0] = F[i, j] - mismatch
+            t[1] = F[i, j+1] - gap
+            t[2] = F[i+1, j] - gap
+            tmax = np.max(t)
+            F[i+1, j+1] = tmax
+            if t[0] == tmax:
+                P[i+1, j+1] += 2
+            if t[1] == tmax:
+                P[i+1, j+1] += 3
+            if t[2] == tmax:
+                P[i+1, j+1] += 4
+    # Trace through an optimal alignment.
+    i = nx
+    j = ny
+    rx = []
+    ry = []
+    while i > 0 or j > 0:
+        if P[i, j] in [2, 5, 6, 9]:
+            rx.append(x[i-1])
+            ry.append(y[j-1])
+            i -= 1
+            j -= 1
+        elif P[i, j] in [3, 5, 7, 9]:
+            rx.append(x[i-1])
+            ry.append('-')
+            i -= 1
+        elif P[i, j] in [4, 6, 7, 9]:
+            rx.append('-')
+            ry.append(y[j-1])
+            j -= 1
+    # Reverse the strings.
+    rx = ''.join(rx)[::-1]
+    ry = ''.join(ry)[::-1]
+    return '\n'.join([rx, ry])
+
+
+def main():
+    """  
+    The main function should contain all functions that solved the stated tasks. 
+    """
+
+    # T2
+
+    # T3
+
+    # pass is used when a function is not completely difened.
+    # Remove it once you have started with the assignnment.
+    pass
+
+
+if __name__ == "__main__":
+    try:
+        args = create_parser()
+        # accesing the path of the files
+        print(args.file_one)
+
+        main()
+    except:
+        print('Try:  python3 template-A3.py -f1 to_msa.fasta')
