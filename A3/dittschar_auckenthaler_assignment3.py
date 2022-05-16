@@ -4,7 +4,7 @@ import getopt
 import sys
 import numpy as np
 import pandas as pd
-from itertools import combinations
+from itertools import combinations, product
 from operator import itemgetter
 
 def get_args():
@@ -343,6 +343,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
         
     # get matrices and number of rows/columns
     
+    # get all alignment scores and alignment strings for combinations of sequences
     opt_scores = []
     list_strings0 = []
     list_strings1 = []
@@ -350,33 +351,59 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
         seqs_consider = itemgetter(comb[0], comb[1])(sequences)
         S, T, rows, columns =  compute(seqs_consider, match, mismatch, gap)
         opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, seqs_consider[0], seqs_consider[1])
+        # append combination strings and combination optimal scores
         list_strings0.append(astring0)
         list_strings1.append(astring1)
         opt_scores = np.append(opt_scores, opt_score)
-        
-    combs = list(map(list,combinations([0,1,2,3],2)))
-    print("opt_scores = ", opt_scores)
-    print("List strings 0: ", list_strings0)
 
-    max_score_arg = np.argmax(opt_scores)
+    # get combinations into variable   
+    combs = list(map(list,combinations([0,1,2,3],2)))
+    # print("opt_scores = ", opt_scores)
+    # print("List strings 0: ", list_strings0)
+
+    # get the index of the optimal score
+    max_score_arg = np.argmin(opt_scores)
+    # get the aligned sequence strings with optimal scores
     A_max = [list_strings0[max_score_arg], list_strings1[max_score_arg]]
     print("A_max: ", A_max)
     #a_rest_inds = [x for x in [0,1,2,3] if x not in combs[max_score_arg]]
+     
+    # which sequences are NOT in A_max? Find out here
     rest_ind = [i for i, x in enumerate(combs) if x[0] not in combs[max_score_arg] and x[1] not in combs[max_score_arg]][0]
-
+    # and put them into a rest
     A_rest = [list_strings0[rest_ind], list_strings1[rest_ind]]
     print("A_rest: ", A_rest)
     
+    # in this part we get all possible cross-alignment-scores
+    list_crossstrings0 = []
+    list_crossstrings1 = []
+    cross_opt_scores = []
+    print(list(map(list,product([0,1],[0,1]))))
     for i, max_seq in enumerate(A_max):
         for j, rest_seq in enumerate(A_rest):
             S, T, rows, columns =  compute([max_seq, rest_seq], match, mismatch, gap)
+            # in traceback_cross(), gaps are inserted as "x", so you can find the new gaps
             opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback_cross(S, T, rows, columns, max_seq, rest_seq)
             #print("Astring 0: ", astring0)
-        
+            cross_opt_scores = np.append(cross_opt_scores, opt_score)
+            list_crossstrings0.append(astring0)
+            list_crossstrings1.append(astring1)
             print("Optimal score for this combination: ", opt_score)
 
-    
+    # here you should find out the optimal cross score
 
+    # and then you should insert gaps at the indices of the non-crossaligned strings where the cross-aligned strings have new gaps
+    # this is not done yet
+    max_cross_arg = np.argmin(cross_opt_scores)
+    print("The cross combination with the best score: ", max_cross_arg)
+    numpified_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
+    print("Numpy array of strings of cross: ", np.array(list(str(list_crossstrings0[max_cross_arg]))))
+
+    new_aligned = np.argwhere(numpified_cross == "x")
+
+   
+        
+    print("Indices of new gaps: ", new_aligned)
     # combs_reduced = [x for x in combs if x not in [combs[max_score_arg], comb_rest_inds]]
     # inds_reduced = [i for i, x in enumerate(combs) if x not in [combs[max_score_arg], comb_rest_inds]]
     # opt_scores_reduced = [opt_scores[i] for i, x in enumerate(combs) if x not in [combs[max_score_arg], a_rest_inds]]
