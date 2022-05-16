@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from itertools import combinations, product
 from operator import itemgetter
+import math
 
 def get_args():
     """
@@ -394,6 +395,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
 
     # and then you should insert gaps at the indices of the non-crossaligned strings where the cross-aligned strings have new gaps
     # this is not done yet
+
     max_cross_arg = np.argmin(cross_opt_scores)
     print("The cross combination with the best score: ", max_cross_arg)
     numpified_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
@@ -417,12 +419,41 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
 
     #visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
 
+def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
+    #S_obs (X,Y)
+    S_obs_seqs= [sequence0,sequence1]
+    S_obs, T_obs, rows_obs, columns_obs =  compute(S_obs_seqs, match, mismatch, gap)
+    S_obs, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S_obs, T_obs, rows_obs, columns_obs, S_obs_seqs[0], S_obs_seqs[1])
+    print("Feng- Doolittle S_obs: ", S_obs)
+    #Optimal Score S(X,X)
+    S_id0_seqs= [sequence0,sequence0]
+    S_id0, T_id0, rows_id0, columns_id0 =  compute(S_id0_seqs, match, mismatch, gap)
+    S_id0_ops, match_no__id0, mismatch_no__id0, gap_no__id0, astring0__id0, astring1__id0 = traceback(S_id0, T_id0, rows_id0, columns_id0, S_id0_seqs[0], S_id0_seqs[1])
+    #optimal Score S(Y,Y)
+    S_id1_seqs= [sequence1,sequence1]
+    S_id1, T_id1, rows_id1, columns_id1 =  compute(S_id1_seqs, match, mismatch, gap)
+    S_id1_ops, match_no__id1, mismatch_no__id1, gap_no__id1, astring0__id1, astring1__id1 = traceback(S_id1, T_id1, rows_id1, columns_id1, S_id1_seqs[0], S_id1_seqs[1])
+    #S_id
+    S_id= (S_id0_ops+S_id1_ops)/2
+    print("Feng- Doolittle S_id: ",S_id)
+
+    #---------------------------------------
+    # S_rand is missing!!!
+    #----------------------------------------
+    
+    #d= math.log((S_obs-S_rand)/(S_id- S_rand))
+
+    return 
+
 def main():
      
     sequences,ids, match, mismatch, gap= get_args()
     # get matrices and number of rows/columns
     get_multiple_alignments(sequences,ids, match, mismatch, gap)
 
+    sequence0 = sequences[0]
+    sequence1= sequences[1]
+    feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap)
     #opt_scores = []
     # for comb in list(map(list,combinations([0,1,2,3],2))):
     #     seqs_consider = itemgetter(comb[0], comb[1])(sequences)
