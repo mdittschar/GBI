@@ -1,0 +1,21 @@
+
+ ID of Sequence 1: Sequence 
+ ID of Sequence 2: Sequence
+1                                                          60
+AGGAGGCTGATCCCxCGCCGxxCCAxGxGGGCxGGCGAGATCAxGCATCCTGTGCCAGCC
+|   ||  || |||  |  |  ||| | |||| || | | | | || | |  ||| | ||
+A---GGxxGACCCCGTGAAGACCCACGAGGGCTGGGGCGxTGATGCxTGCCCTGCAACCC
+61                                                         120
+CAGGGCCGCC-CC--CAAGGCCA---CCATCCTGTGG-AGCx-AAxGxG-GCACCGAGAT
+|   |||  |  |  |   |||    | | |  ||||  ||  || | |  | ||   | 
+CCCCGCCCACTACxCCCG-GCCTGAGCTAxCAGGTGGCTGCTGAACGAGTTCCCC---AA
+121                                             165
+CCTGGGCA-ACAGCxACxxCAGGGTGACCGxTGAxCCAGxxxx-C
+| |   |   || | ||  ||||     || ||| ||||     |
+CTTCATC-CCCACCGACGGCAGGCACTTCG-TGAGCCAGACCACC
+Match Score: 3
+Mismatch Score: -2
+Gap Penalty: 4
+Match No.: 83
+Mismatch No.:57
+Gap No.: 25
