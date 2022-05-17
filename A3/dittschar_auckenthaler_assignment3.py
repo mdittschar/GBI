@@ -8,6 +8,7 @@ from itertools import combinations, product
 from operator import itemgetter
 import math
 import random
+from collections import Counter
 
 def get_args():
     """
@@ -167,6 +168,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     match_no = 0
     mismatch_no = 0
     gap_no = 0
+    #------ ends at 0 be needs to be -1 
     # while we have not gone through the whole matrix
     while cur_col != 0 and cur_row != 0:
         if T[cur_row, cur_col] == "diagonal":
@@ -429,7 +431,11 @@ def random_seq(L, rs):
     for i in range(0,L):            
         random_dna_seq+=random.choice(dna)
         #sequences[j].append(random_dna_seq)
-    return random_dna_seq
+        
+    #---- Counts 
+  
+    counter= Counter(random_dna_seq)
+    return random_dna_seq, counter
 
 def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     #S_obs (X,Y)
@@ -450,19 +456,31 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     print("Feng- Doolittle S_id: ",S_id)
 
     #---------------------------------------
-    # S_rand is missing!!!
+    # S_rand wahrscheinlich nicht correct
     #----------------------------------------
-    random_seqX= random_seq(L, 1)
-    random_seqY= random_seq(L, 2)
+    random_seqX, counterX= random_seq(L, 1)
+    random_seqY, counterY= random_seq(L, 2)
+
+    Ns= []
+    for a in (["A","G","C","T"]):
+        NX= counterX[a]
+        #print (NX)
+        NY= counterY[a]
+        #print(NY)
+        Ns = np.append(Ns,(NX*NY*mismatch))
+        #print("N von a: ", Ns)
+    #print(Ns)
+    N= sum(Ns)
+    print (N)
     S_rand_seqs= [random_seqX, random_seqY]
     print(S_rand_seqs)
     S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
     S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1])
 
-    S_rand= 1/L * (S_rand_obs)*match_no_rand*mismatch_no_rand - gap_no_rand*gap
-    print("Feng- Doolittle S_rand: ",S_rand)
-    d= math.log(abs((S_obs-S_rand)/(S_id- S_rand)))
-    print(d)
+    S_rand= 1/L *N - gap_no_rand*gap
+    #print("Feng- Doolittle S_rand: ",S_rand)
+    d= -math.log((S_obs-S_rand)/(S_id- S_rand))
+    print("Distance: ",d)
 
     return d
 
