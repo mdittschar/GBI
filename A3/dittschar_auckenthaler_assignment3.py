@@ -493,7 +493,7 @@ def distance_matrix(sequences,filename, match, mismatch, gap, L):
 
                 d_matrix[i][j]= d
         d_matrix_df= pd.DataFrame(d_matrix, index=[1,2,3,4], columns=[1,2,3,4])
-        print (d_matrix_df)
+        print (f"Distance Matrix: \n{d_matrix_df}")
         file_out.write(f"\nDistance Matrix:\n {d_matrix_df}")
         file_out.close
 
@@ -550,8 +550,4 @@ if __name__ == "__main__":
         main()
     except: 
         print("Try : python dittschar_auckenthaler_assignment2.py -a <file1> -b <file2> -m <match-score> -s <mismatch-score> -g <gap-score>")
-
-    
-
-
 
