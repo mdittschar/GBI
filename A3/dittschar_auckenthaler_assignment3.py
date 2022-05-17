@@ -131,7 +131,7 @@ def compute(sequences, match, mismatch, gap):
     
     
 
-def traceback(S, T, rows, columns, sequence0, sequence1):
+def traceback(S, T, rows, columns, sequence0, sequence1 ,gap_c):
     """
     Trace back the optimal alignment for a given sequence and traceback matrix
 
@@ -143,6 +143,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
         columns (int): number of columns in S and T
         sequence0 (Seq): Sequence 1 to align
         sequence1 (Seq): Sequence 2 to align
+        gap_c (String):   gap character
 
     Returns:
     --------
@@ -188,7 +189,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
             cur_col = cur_col - 1
             gap_no = gap_no + 1
             # add gap character to first sequence
-            tstring0 = tstring0 + "-"
+            tstring0 = tstring0 + gap_c
             tstring1 = tstring1 + str_seq1[cur_col]
         else:
             # go one cell up
@@ -196,7 +197,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
             gap_no = gap_no + 1
             # add gap character to second sequence
             tstring0 = tstring0 + str_seq0[cur_row]
-            tstring1 = tstring1 + "-"
+            tstring1 = tstring1 + gap_c
 
     # reverse the completed alignment strings
     tstring0 = tstring0[::-1]
@@ -206,82 +207,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1):
     opt_score = S[rows-1, columns-1]
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
-
-def traceback_cross(S, T, rows, columns, sequence0, sequence1):
-    """
-    Trace back the optimal alignment for a given sequence and traceback matrix
-
-    Parameters:
-    -----------
-        S (np.array): sequence matrix with alignment scores
-        T (np.array): traceback matrix with directions
-        rows (int): number of rows in S and T
-        columns (int): number of columns in S and T
-        sequence0 (Seq): Sequence 1 to align
-        sequence1 (Seq): Sequence 2 to align
-
-    Returns:
-    --------
-        opt_score (int): optimal global alignment score
-        match_no (int): number of matches
-        mismatch_no(int): number of mismatches 
-        gap_no (int): number of gaps 
-        tstring0 (str): string 1 of optimal alignment
-        tstring1 (str): string 2 of optimal alignments
-    """
-
-    # traceback
-    # get a characterwise list of the sequences
-    str_seq0 = list(str(sequence0))
-    str_seq1 = list(str(sequence1))
-    # initialise current row and column
-    cur_row = rows - 1
-    cur_col = columns - 1
-    # initialise alignment strings
-    tstring0 = ""
-    tstring1 = ""
-    # initialise match, mismatch and gap number
-    match_no = 0
-    mismatch_no = 0
-    gap_no = 0
-    # while we have not gone through the whole matrix
-    while cur_col != 0 and cur_row != 0:
-        if T[cur_row, cur_col] == "diagonal":
-            # if characters match, increase match number
-            if str_seq0[cur_row -1] == str_seq1[cur_col - 1]:
-                match_no = match_no + 1
-            # else, increase mismatch number
-            else:
-                mismatch_no = mismatch_no + 1
-            # go back up diagonally
-            cur_row = cur_row - 1
-            cur_col = cur_col - 1
-            tstring0 = tstring0 + str_seq0[cur_row]
-            tstring1 = tstring1 + str_seq1[cur_col]
-        elif T[cur_row, cur_col] == "left":
-            # go one cell to the left
-            cur_col = cur_col - 1
-            gap_no = gap_no + 1
-            # add gap character to first sequence
-            tstring0 = tstring0 + "x"
-            tstring1 = tstring1 + str_seq1[cur_col]
-        else:
-            # go one cell up
-            cur_row = cur_row - 1 
-            gap_no = gap_no + 1
-            # add gap character to second sequence
-            tstring0 = tstring0 + str_seq0[cur_row]
-            tstring1 = tstring1 + "x"
-
-    # reverse the completed alignment strings
-    tstring0 = tstring0[::-1]
-    tstring1 = tstring1[::-1]
-
-    # get the optimal alignment score
-    opt_score = S[rows-1, columns-1]
-    return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
-
-    
+  
 def visual_alignment(tstring0, tstring1,filename, ids, match_no, mismatch_no, gap_no, match, mismatch, gap, pair_no=60 ):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
@@ -354,7 +280,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     for comb in list(map(list,combinations([0,1,2,3],2))):
         seqs_consider = itemgetter(comb[0], comb[1])(sequences)
         S, T, rows, columns =  compute(seqs_consider, match, mismatch, gap)
-        opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, seqs_consider[0], seqs_consider[1])
+        opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, seqs_consider[0], seqs_consider[1], '-')
         # append combination strings and combination optimal scores
         list_strings0.append(astring0)
         list_strings1.append(astring1)
@@ -382,33 +308,74 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     list_crossstrings0 = []
     list_crossstrings1 = []
     cross_opt_scores = []
-    print(list(map(list,product([0,1],[0,1]))))
+
+    combis_Amax_Arest= (list(map(list,product([0,1],[0,1]))))
     for i, max_seq in enumerate(A_max):
         for j, rest_seq in enumerate(A_rest):
             S, T, rows, columns =  compute([max_seq, rest_seq], match, mismatch, gap)
-            # in traceback_cross(), gaps are inserted as "x", so you can find the new gaps
-            opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback_cross(S, T, rows, columns, max_seq, rest_seq)
+            opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, max_seq, rest_seq,'x')
             #print("Astring 0: ", astring0)
             cross_opt_scores = np.append(cross_opt_scores, opt_score)
             list_crossstrings0.append(astring0)
             list_crossstrings1.append(astring1)
-            print("Optimal score for this combination: ", opt_score)
+            
+            print(f"Optimal score for this combination: {opt_score} for i= {i} and j= {j}")
 
-    # here you should find out the optimal cross score
-
-    # and then you should insert gaps at the indices of the non-crossaligned strings where the cross-aligned strings have new gaps
-    # this is not done yet
-
+    # here you should find out the optimal cross score 
     max_cross_arg = np.argmin(cross_opt_scores)
-    print("The cross combination with the best score: ", max_cross_arg)
+    print("Index of the cross combination with the best score: ", max_cross_arg)
+    print("Combination indexes of the cross combination with the best score of A_max and A_rest: ", combis_Amax_Arest[max_cross_arg])
+
     numpified_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
     print("Numpy array of strings of cross: ", np.array(list(str(list_crossstrings0[max_cross_arg]))))
 
-    new_aligned = np.argwhere(numpified_cross == "x")
+    numpified_cross_rest = np.array(list(str(list_crossstrings1[max_cross_arg])))
+    print("Numpy array of strings of cross_rest: ", np.array(list(str(list_crossstrings1[max_cross_arg]))))
 
-   
+    new_aligned = np.argwhere(numpified_cross == "x")
+    new_aligned_rest = np.argwhere(numpified_cross_rest == "x")
+
+    #if (combis_Amax_Arest[max_cross_arg][0]==1):
+     #   print("hello 1")
+    # for k in range(len(new_aligned)):
+     #       print(new_aligned[k])
+        #A_max[0][0]
+
+    #elif(combis_Amax_Arest[max_cross_arg][0]==0):
+     #   print("hello 2")
+        #print(A_max[1])
+
+    #elif (combis_Amax_Arest[max_cross_arg][1]==1):
+     #   print("hello 3")
+        #for index in (new_aligned_rest):
+         #   print(new_aligned_rest[index])
         
+
+    #elif (combis_Amax_Arest[max_cross_arg][1]==0):
+     #   print("hello 4")
+        #print(A_rest[1])
     print("Indices of new gaps: ", new_aligned)
+    print("Indices of new gaps: ", new_aligned_rest)
+
+    #a_max_string= ''
+    #for index in range (len(A_max[0])):
+     #   if(A_max[0][index])
+
+
+      #  print(A_max[0][index])
+    #print(len(A_max[0]))
+    #A_max[0].inster[0,'-']
+    #print(A_max)
+    #print("A_max 0 an der stelle 2",A_max[0][2])
+    #for k in range (len(new_aligned)):
+        #A_max[0].insert(new_aligned[k], '-')
+        #A_max[new_aligned[k]]= '-'
+        #print(A_rest[0])
+        #print(A_max[0])
+   # print(len(A_max[0]))
+   
+
+    #print("Indices of new gaps: ", new_aligned[0])
     # combs_reduced = [x for x in combs if x not in [combs[max_score_arg], comb_rest_inds]]
     # inds_reduced = [i for i, x in enumerate(combs) if x not in [combs[max_score_arg], comb_rest_inds]]
     # opt_scores_reduced = [opt_scores[i] for i, x in enumerate(combs) if x not in [combs[max_score_arg], a_rest_inds]]
@@ -423,41 +390,59 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     #visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
 
 def random_seq(L, rs):
-    #sequences= [None]*2
+    '''
+    Parameters:
+    ------------------
+    L: (int) length of random sequence
+    rs:(int) randomseed value
+
+    Return:
+    ----------------------
+    random_dna_seq (String) random generated sequence
+    counter (dic) value counts of bases in sequence
+    '''
     random.seed(rs)
     dna = ["A","G","C","T"]
     random_dna_seq='' 
     
     for i in range(0,L):            
         random_dna_seq+=random.choice(dna)
-        #sequences[j].append(random_dna_seq)
-        
-    #---- Counts 
-  
+
     counter= Counter(random_dna_seq)
     return random_dna_seq, counter
 
 def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
+    '''
+    Parameters:
+    ----------------
+    sequence0:(String)  sequence 1 
+    sequence1:(String)  seqeuence 2
+    match:(int)         match score
+    mismatch:(int)      mismatch score
+    gap: (int)          gap score
+    L: (Int)            Length of sequences
+
+    Return:
+    --------------
+    d = (float)         calculated feng-doolittle-distance
+    '''
     #S_obs (X,Y)
     S_obs_seqs= [sequence0,sequence1]
     S_obs, T_obs, rows_obs, columns_obs =  compute(S_obs_seqs, match, mismatch, gap)
-    S_obs, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S_obs, T_obs, rows_obs, columns_obs, S_obs_seqs[0], S_obs_seqs[1])
-    print("Feng- Doolittle S_obs: ", S_obs)
+    S_obs, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S_obs, T_obs, rows_obs, columns_obs, S_obs_seqs[0], S_obs_seqs[1],'-')
+    #print("Feng- Doolittle S_obs: ", S_obs)
     #Optimal Score S(X,X)
     S_id0_seqs= [sequence0,sequence0]
     S_id0, T_id0, rows_id0, columns_id0 =  compute(S_id0_seqs, match, mismatch, gap)
-    S_id0_ops, match_no__id0, mismatch_no__id0, gap_no__id0, astring0__id0, astring1__id0 = traceback(S_id0, T_id0, rows_id0, columns_id0, S_id0_seqs[0], S_id0_seqs[1])
+    S_id0_ops, match_no__id0, mismatch_no__id0, gap_no__id0, astring0__id0, astring1__id0 = traceback(S_id0, T_id0, rows_id0, columns_id0, S_id0_seqs[0], S_id0_seqs[1],'-')
     #optimal Score S(Y,Y)
     S_id1_seqs= [sequence1,sequence1]
     S_id1, T_id1, rows_id1, columns_id1 =  compute(S_id1_seqs, match, mismatch, gap)
-    S_id1_ops, match_no__id1, mismatch_no__id1, gap_no__id1, astring0__id1, astring1__id1 = traceback(S_id1, T_id1, rows_id1, columns_id1, S_id1_seqs[0], S_id1_seqs[1])
+    S_id1_ops, match_no__id1, mismatch_no__id1, gap_no__id1, astring0__id1, astring1__id1 = traceback(S_id1, T_id1, rows_id1, columns_id1, S_id1_seqs[0], S_id1_seqs[1],'-')
     #S_id
     S_id= (S_id0_ops+S_id1_ops)/2
-    print("Feng- Doolittle S_id: ",S_id)
+    #print("Feng- Doolittle S_id: ",S_id)
 
-    #---------------------------------------
-    # S_rand wahrscheinlich nicht correct
-    #----------------------------------------
     random_seqX, counterX= random_seq(L, 1)
     random_seqY, counterY= random_seq(L, 2)
 
@@ -471,18 +456,48 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
         #print("N von a: ", Ns)
     #print(Ns)
     N= sum(Ns)
-    print (N)
+    #print (N)
     S_rand_seqs= [random_seqX, random_seqY]
-    print(S_rand_seqs)
+    #print(S_rand_seqs)
     S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
-    S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1])
+    S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1],'-')
 
     S_rand= 1/L *N - gap_no_rand*gap
     #print("Feng- Doolittle S_rand: ",S_rand)
     d= -math.log((S_obs-S_rand)/(S_id- S_rand))
-    print("Distance: ",d)
-
+    #print("Distance: ",d)
     return d
+
+def distance_matrix(sequences,filename, match, mismatch, gap, L): 
+    '''
+    Parameters:
+    ------------
+    sequences [array]   array of sequences from fasta file
+    filename [String]   name of the file to store distance matrix
+    match (int)         match-score
+    mismatch (int)      mismatch score
+    gap (int)           gap-score
+    L(int)              lenth of random sequence 
+
+    Return:
+    --------------
+    d_matrix_df(Dataframe)  Distance matrix    
+    '''
+    with open(filename, 'w') as file_out:
+        d_matrix = np.zeros((len(sequences), len(sequences)))
+        for j in range(len(sequences)):
+            for i in range(len(sequences)):
+                seqX= sequences[i]
+                seqY= sequences[j]
+                d= feng_doolittle_distance(seqX,seqY,match,mismatch, gap,L)
+
+                d_matrix[i][j]= d
+        d_matrix_df= pd.DataFrame(d_matrix, index=[1,2,3,4], columns=[1,2,3,4])
+        print (d_matrix_df)
+        file_out.write(f"\nDistance Matrix:\n {d_matrix_df}")
+        file_out.close
+
+    return d_matrix_df
 
 def main():
      
@@ -490,9 +505,10 @@ def main():
     # get matrices and number of rows/columns
     get_multiple_alignments(sequences,ids, match, mismatch, gap)
 
-    sequence0 = sequences[0]
-    sequence1= sequences[1]
-    d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
+    
+
+    distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
     #opt_scores = []
     # for comb in list(map(list,combinations([0,1,2,3],2))):
     #     seqs_consider = itemgetter(comb[0], comb[1])(sequences)
