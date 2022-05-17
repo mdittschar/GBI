@@ -7,6 +7,7 @@ import pandas as pd
 from itertools import combinations, product
 from operator import itemgetter
 import math
+import random
 
 def get_args():
     """
@@ -419,7 +420,18 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
 
     #visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
 
-def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
+def random_seq(L, rs):
+    #sequences= [None]*2
+    random.seed(rs)
+    dna = ["A","G","C","T"]
+    random_dna_seq='' 
+    
+    for i in range(0,L):            
+        random_dna_seq+=random.choice(dna)
+        #sequences[j].append(random_dna_seq)
+    return random_dna_seq
+
+def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     #S_obs (X,Y)
     S_obs_seqs= [sequence0,sequence1]
     S_obs, T_obs, rows_obs, columns_obs =  compute(S_obs_seqs, match, mismatch, gap)
@@ -440,10 +452,19 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
     #---------------------------------------
     # S_rand is missing!!!
     #----------------------------------------
-    
-    #d= math.log((S_obs-S_rand)/(S_id- S_rand))
+    random_seqX= random_seq(L, 1)
+    random_seqY= random_seq(L, 2)
+    S_rand_seqs= [random_seqX, random_seqY]
+    print(S_rand_seqs)
+    S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
+    S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1])
 
-    return 
+    S_rand= 1/L * (S_rand_obs)*match_no_rand*mismatch_no_rand - gap_no_rand*gap
+    print("Feng- Doolittle S_rand: ",S_rand)
+    d= math.log(abs((S_obs-S_rand)/(S_id- S_rand)))
+    print(d)
+
+    return d
 
 def main():
      
@@ -453,7 +474,7 @@ def main():
 
     sequence0 = sequences[0]
     sequence1= sequences[1]
-    feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap)
+    d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
     #opt_scores = []
     # for comb in list(map(list,combinations([0,1,2,3],2))):
     #     seqs_consider = itemgetter(comb[0], comb[1])(sequences)
