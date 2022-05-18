@@ -232,7 +232,8 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, matc
     # continue while alignment is not fully visualised yet
 
     with open(filename, 'w') as file_out:
-        file_out.write(f"\n ID of Sequence 1: {ids[0]} \n ID of Sequence 2: {ids[1]}")
+        #for k in range(len(ids)):
+            #file_out.write(f"\n ID of Sequence {k+1}: {ids[k]}")
 
         while i*pair_no < seq_lens:
             # assign strings to be visualised
@@ -248,6 +249,11 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, matc
             display_alignment0 = "".join(np.where(np.array(list(tstring0)) != np.array(list(tstring1)), "*", match_array0)[i*pair_no:(i+1)*pair_no])
             display_alignment1 = "".join(np.where(np.array(list(tstring1)) != np.array(list(tstring2)), "*", match_array1)[i*pair_no:(i+1)*pair_no])
             display_alignment2 = "".join(np.where(np.array(list(tstring2)) != np.array(list(tstring3)), "*", match_array2)[i*pair_no:(i+1)*pair_no])
+
+            #display_alignment0 = "".join(np.where(np.array(list(tstring0)) == '-', " ", match_array0)[i*pair_no:(i+1)*pair_no])
+            #display_alignment1 = "".join(np.where(np.array(list(tstring1)) == '-', "i ", match_array1)[i*pair_no:(i+1)*pair_no])
+            #display_alignment2 = "".join(np.where(np.array(list(tstring2)) == '-', " i", match_array2)[i*pair_no:(i+1)*pair_no])
+
             # visualisation for full lines
             if i*pair_no < seq_lens - pair_no:
                 empty = (pair_no - 2 - i)* " "
@@ -321,7 +327,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
             list_crossstrings1.append(astring1)
             
 
-    # here you should find out the optimal cross score 
+    #find out the optimal cross score 
     max_cross_arg = np.argmin(cross_opt_scores)
 
     A_max_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
@@ -449,7 +455,7 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     #print("Distance: ",d)
     return d
 
-def distance_matrix(sequences,filename, match, mismatch, gap, L): 
+def distance_matrix(sequences,ids, filename, match, mismatch, gap, L): 
     '''
     Parameters:
     ------------
@@ -475,8 +481,11 @@ def distance_matrix(sequences,filename, match, mismatch, gap, L):
                 d_matrix[i][j]= d
         d_matrix_df= pd.DataFrame(d_matrix, index=[1,2,3,4], columns=[1,2,3,4])
         print (f"Distance Matrix: \n{d_matrix_df}")
+        #for k in range(len(ids)):
+            #file_out.write(f"\n ID of Sequence {k+1}: {ids[k]}")
         file_out.write(f"\nDistance Matrix:\n {d_matrix_df}")
         file_out.close
+
 
     return d_matrix_df
 
@@ -488,7 +497,7 @@ def main():
 
     
 
-    distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
     
     #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
       
@@ -500,7 +509,7 @@ def main():
     #opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
     #print("Optimal alignment score: ", opt_score)
     #call function to print and write output of needleman-wunsch
-    visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match, mismatch, gap)
+    visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment3_profile_alignment.txt", ids, match, mismatch, gap)
 
     
 
