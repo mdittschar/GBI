@@ -51,7 +51,6 @@ def get_args():
                 #ids [i]= id
                 # append sequences to list
                 ids = np.append(ids, id)
-                print("Sequence: ", se)
 
                 ses[i] = se
                 i = i + 1
@@ -208,7 +207,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1 ,gap_c):
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
   
-def visual_alignment(tstring0, tstring1,filename, ids, match_no, mismatch_no, gap_no, match, mismatch, gap, pair_no=60 ):
+def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, match, mismatch, gap, pair_no=60 ):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
     (TASK 5)
@@ -240,8 +239,15 @@ def visual_alignment(tstring0, tstring1,filename, ids, match_no, mismatch_no, ga
             # pair_no is number of pairs to visualise in one row
             display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
             display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
+            display_seq2 = tstring2[i*pair_no:(i+1)*pair_no]
+            display_seq3 = tstring3[i*pair_no:(i+1)*pair_no]
             # show alignment lines where matches are present
-            display_alignment = "".join(np.where(np.array(list(tstring0))== np.array(list(tstring1)), "|", " ")[i*pair_no:(i+1)*pair_no])
+            match_array0 = np.where(np.logical_and(np.array(list(tstring0))== np.array(list(tstring1)),np.array(list(tstring0)) != "-"), "|", " ")
+            match_array1 = np.where(np.logical_and(np.array(list(tstring1))== np.array(list(tstring2)),np.array(list(tstring1)) != "-"), "|", " ")
+            match_array2 = np.where(np.logical_and(np.array(list(tstring2))== np.array(list(tstring3)),np.array(list(tstring2)) != "-"), "|", " ")
+            display_alignment0 = "".join(np.where(np.array(list(tstring0)) != np.array(list(tstring1)), "*", match_array0)[i*pair_no:(i+1)*pair_no])
+            display_alignment1 = "".join(np.where(np.array(list(tstring1)) != np.array(list(tstring2)), "*", match_array1)[i*pair_no:(i+1)*pair_no])
+            display_alignment2 = "".join(np.where(np.array(list(tstring2)) != np.array(list(tstring3)), "*", match_array2)[i*pair_no:(i+1)*pair_no])
             # visualisation for full lines
             if i*pair_no < seq_lens - pair_no:
                 empty = (pair_no - 2 - i)* " "
@@ -252,20 +258,17 @@ def visual_alignment(tstring0, tstring1,filename, ids, match_no, mismatch_no, ga
                 empty = " "*(seq_lens - pair_no*i)
                 alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
             # print the combined information
-            print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
+            print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
             #Task 5 a) write it to textfile
-            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment}\n{display_seq1}")
+            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
         
             i = i + 1
         #Task 5 b) and c) write parameter to text file:
         print("Match Score: ",match)
         print("Mismatch Score: ", mismatch)
         print("Gap penalty: ",gap )
-        print("Match No.: ", match_no)
-        print("Mismatch No.: ", mismatch_no)
-        print("Gap No.: ", gap_no) 
        
-        file_out.write(f"\nMatch Score: {match}\nMismatch Score: {mismatch}\nGap Penalty: {gap}\nMatch No.: {match_no}\nMismatch No.:{mismatch_no}\nGap No.: {gap_no}")
+        file_out.write(f"\nMatch Score: {match}\nMismatch Score: {mismatch}\nGap Penalty: {gap}")
         file_out.close
       
 
@@ -295,14 +298,12 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     max_score_arg = np.argmin(opt_scores)
     # get the aligned sequence strings with optimal scores
     A_max = [list_strings0[max_score_arg], list_strings1[max_score_arg]]
-    print("A_max: ", A_max)
     #a_rest_inds = [x for x in [0,1,2,3] if x not in combs[max_score_arg]]
      
     # which sequences are NOT in A_max? Find out here
     rest_ind = [i for i, x in enumerate(combs) if x[0] not in combs[max_score_arg] and x[1] not in combs[max_score_arg]][0]
     # and put them into a rest
     A_rest = [list_strings0[rest_ind], list_strings1[rest_ind]]
-    print("A_rest: ", A_rest)
     
     # in this part we get all possible cross-alignment-scores
     list_crossstrings0 = []
@@ -319,75 +320,55 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
             list_crossstrings0.append(astring0)
             list_crossstrings1.append(astring1)
             
-            print(f"Optimal score for this combination: {opt_score} for i= {i} and j= {j}")
 
     # here you should find out the optimal cross score 
     max_cross_arg = np.argmin(cross_opt_scores)
-    print("Index of the cross combination with the best score: ", max_cross_arg)
-    print("Combination indexes of the cross combination with the best score of A_max and A_rest: ", combis_Amax_Arest[max_cross_arg])
 
-    numpified_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
-    print("Numpy array of strings of cross: ", np.array(list(str(list_crossstrings0[max_cross_arg]))))
+    A_max_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
 
-    numpified_cross_rest = np.array(list(str(list_crossstrings1[max_cross_arg])))
-    print("Numpy array of strings of cross_rest: ", np.array(list(str(list_crossstrings1[max_cross_arg]))))
+    A_rest_cross = np.array(list(str(list_crossstrings1[max_cross_arg])))
 
-    new_aligned = np.argwhere(numpified_cross == "x")
-    new_aligned_rest = np.argwhere(numpified_cross_rest == "x")
-
-    #if (combis_Amax_Arest[max_cross_arg][0]==1):
-     #   print("hello 1")
-    # for k in range(len(new_aligned)):
-     #       print(new_aligned[k])
-        #A_max[0][0]
-
-    #elif(combis_Amax_Arest[max_cross_arg][0]==0):
-     #   print("hello 2")
-        #print(A_max[1])
-
-    #elif (combis_Amax_Arest[max_cross_arg][1]==1):
-     #   print("hello 3")
-        #for index in (new_aligned_rest):
-         #   print(new_aligned_rest[index])
-        
-
-    #elif (combis_Amax_Arest[max_cross_arg][1]==0):
-     #   print("hello 4")
-        #print(A_rest[1])
-    print("Indices of new gaps: ", new_aligned)
-    print("Indices of new gaps: ", new_aligned_rest)
-
-    #a_max_string= ''
-    #for index in range (len(A_max[0])):
-     #   if(A_max[0][index])
-
-
-      #  print(A_max[0][index])
-    #print(len(A_max[0]))
-    #A_max[0].inster[0,'-']
-    #print(A_max)
-    #print("A_max 0 an der stelle 2",A_max[0][2])
-    #for k in range (len(new_aligned)):
-        #A_max[0].insert(new_aligned[k], '-')
-        #A_max[new_aligned[k]]= '-'
-        #print(A_rest[0])
-        #print(A_max[0])
-   # print(len(A_max[0]))
-   
-
-    #print("Indices of new gaps: ", new_aligned[0])
-    # combs_reduced = [x for x in combs if x not in [combs[max_score_arg], comb_rest_inds]]
-    # inds_reduced = [i for i, x in enumerate(combs) if x not in [combs[max_score_arg], comb_rest_inds]]
-    # opt_scores_reduced = [opt_scores[i] for i, x in enumerate(combs) if x not in [combs[max_score_arg], a_rest_inds]]
+    idx_of_x_max = np.ndarray.flatten(np.argwhere(A_max_cross == "x"))
+    idx_of_x_rest = np.ndarray.flatten(np.argwhere(A_rest_cross == "x"))
 
     
-    #max_cross = np.argmax(opt_scores_reduced)
-    #print("Max cross score: ", max_cross)
-   # A_cross = [list_strings0[inds_reduced[max_cross]], list_strings1[inds_reduced[max_cross]]]
-    #print("A_cross: ", A_cross)
+    if combis_Amax_Arest[max_cross_arg][0] == 1:
+        A_max_noncross = A_max[0]
+    else: 
+        A_max_noncross = A_max[1]
+
+    if combis_Amax_Arest[max_cross_arg][1] == 1:
+        A_rest_noncross = A_rest[0]
+    else: 
+        A_rest_noncross = A_rest[1]
+
+    for i in idx_of_x_max:
+        A_max_noncross = list(A_max_noncross)
+        A_max_noncross.insert(i, "x")
+    for i in idx_of_x_rest:
+        A_rest_noncross = list(A_rest_noncross)
+        A_rest_noncross.insert(i, "x")
+        
+
+    A_rest_noncross = np.array(A_rest_noncross)
+    A_max_noncross = np.array(A_max_noncross)
+    A_rest_cross = np.array(A_rest_cross)
+    A_max_cross = np.array(A_max_cross)
+
+    A_max_cross = np.where(A_max_cross =="x", "-", A_max_cross)
+    A_max_noncross = np.where(A_max_noncross =="x", "-", A_max_noncross)
+    A_rest_cross = np.where(A_rest_cross =="x", "-", A_rest_cross)
+    A_rest_noncross = np.where(A_rest_noncross =="x", "-", A_rest_noncross)
+
+    A_max_cross = "".join(A_max_cross)
+    A_max_noncross = "".join(A_max_noncross)
+    A_rest_cross = "".join(A_rest_cross)
+    A_rest_noncross = "".join(A_rest_noncross)
 
 
-    #visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
+    return  A_max_cross, A_max_noncross, A_rest_cross, A_rest_noncross
+    
+
 
 def random_seq(L, rs):
     '''
@@ -503,43 +484,23 @@ def main():
      
     sequences,ids, match, mismatch, gap= get_args()
     # get matrices and number of rows/columns
-    get_multiple_alignments(sequences,ids, match, mismatch, gap)
+    profile1_0, profile1_1, profile2_0, profile2_1 = get_multiple_alignments(sequences,ids, match, mismatch, gap)
 
     
 
-    distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    #distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    
     #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
-    #opt_scores = []
-    # for comb in list(map(list,combinations([0,1,2,3],2))):
-    #     seqs_consider = itemgetter(comb[0], comb[1])(sequences)
-    #     S, T, rows, columns =  compute(seqs_consider, match, mismatch, gap)
-    #     opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, seqs_consider[0], seqs_consider[1])
-    #     visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
-    #     opt_scores = np.append(opt_scores, opt_score)
-        
-    # combs = list(map(list,combinations([0,1,2,3],2)))
-    # print("combinations: ", list(map(list,combinations([0,1,2,3],2))))
-    # print("opt_scores = ", opt_scores)
-
-    # max_score_arg = np.argmax(opt_scores)
-    # A_max = [sequences[combs[max_score_arg][0]], sequences[combs[max_score_arg][1]]]
+      
+   
     
-    # a_rest_inds = [x for x in [0,1,2,3] if x not in combs[max_score_arg]]
-    # print("A rest inds: ", a_rest_inds)
-    # A_rest = [sequences[a_rest_inds[0]], sequences[a_rest_inds[1]]]
-    # combs_reduced = [x for x in combs if x not in [combs[max_score_arg], a_rest_inds]]
-    # opt_scores_reduced = [opt_scores[i] for i, x in enumerate(combs) if x not in [combs[max_score_arg], a_rest_inds]]
-    # print("Combs reduced: ", combs_reduced)
-    # max_cross = np.argmax(opt_scores_reduced)
-    # print("Max cross score: ", max_cross)
-    #A_cross = 
     
     #S, T, rows, columns =  compute(sequences, match, mismatch, gap)
     # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
     #opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
     #print("Optimal alignment score: ", opt_score)
     #call function to print and write output of needleman-wunsch
-    #visual_alignment(astring0, astring1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match_no, mismatch_no, gap_no, match, mismatch, gap)
+    visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment2_global_alignment.txt", ids, match, mismatch, gap)
 
     
 

@@ -2,20 +2,29 @@
  ID of Sequence 1: Sequence 
  ID of Sequence 2: Sequence
 1                                                          60
-AGGAGGCTGATCCCxCGCCGxxCCAxGxGGGCxGGCGAGATCAxGCATCCTGTGCCAGCC
-|   ||  || |||  |  |  ||| | |||| || | | | | || | |  ||| | ||
-A---GGxxGACCCCGTGAAGACCCACGAGGGCTGGGGCGxTGATGCxTGCCCTGCAACCC
+AG-GAGGCTGATCCCCGCCGCCAGGGGCGGCGAGATCAGCATCCTG-TGCCA-GCC-CAG
+|* ***|***||***||**|****||||*|||****|||**||*** |||*|*|** *||
+AT-CCTGGACATGGACGTGGTGGAGGGCAGCGCCGCCAGGTTCGAC-TGCAAGGTG-GAG
+|********|**|*|*|**|*****||||||**|***||**|*|***|||***|*****|
+AGCGACAC-C--G-AGGCCGACATCGGCAGCAACCTGAG-GTGGGGCTGCGCCGCCGCCG
+||*|||*| |**|*||*||*||***|||*|***|*|||* |**|**||||**|*||*|||
+AGGGACCC-CGTGAAGACCCACGAGGGCTGGGGCGTGAT-GCTGCCCTGCAACCCCCCCG
 61                                                         120
-CAGGGCCGCC-CC--CAAGGCCA---CCATCCTGTGG-AGCx-AAxGxG-GCACCGAGAT
-|   |||  |  |  |   |||    | | |  ||||  ||  || | |  | ||   | 
-CCCCGCCCACTACxCCCG-GCCTGAGCTAxCAGGTGGCTGCTGAACGAGTTCCCC---AA
-121                                             165
-CCTGGGCA-ACAGCxACxxCAGGGTGACCGxTGAxCCAGxxxx-C
-| |   |   || | ||  ||||     || ||| ||||     |
-CTTCATC-CCCACCGACGGCAGGCACTTCG-TGAGCCAGACCACC
+GGCCGCCCCCAAGGCCACCATCCT-GTGG-AGC-AAGG--G-C-A----CCGAG-ATCCT
+||*|**||||*|**||****|**| |||| **| ||||**|*|*|**  |||*| |****
+GG-CTACCCCGACCCCGAGGTGAT-GTGG-TTC-AAGGACGACAACC--CCGTG-AAGGA
+*|***|*|||*|***|****||*| |*||***|**||||********  *||*|******
+-GCA-AGCCC-AGG-C-CCATGGT-GAGGTGGCTGAGGAACG-G------CGAGC-CCCT
+**||***||| *|| | |***|*|**|||||||||**|||||*|*  ***|*|*|**|*|
+CCCACTACCC-CGG-C-CTGAGCTACAGGTGGCTGCTGAACGAGT--TCCCCAACTTCAT
+121                                          162
+GGGCA-ACAGCACCAG---G-GT---GAC--CGTGACCAG-C
+|*|||**||***||||***|**|** |||***|*|**||* |
+GAGCAGGCACTTCCAGATCGACTAC-GACGAGGAGGGCAA-C
+|**|||*||****|||********* |*****|*|******|
+GGCCAGCCAG-AACAG--G----GT-G-GAG-GTG-CTGGCC
+**|||*|*|* **|||  |* ***|*|*|||***| ****||
+CCCCACCGAC-GGCAG--GC-ACTTCGTGAGCCAG-ACCACC
 Match Score: 3
 Mismatch Score: -2
 Gap Penalty: 4
-Match No.: 83
-Mismatch No.:57
-Gap No.: 25
