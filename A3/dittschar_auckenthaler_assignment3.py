@@ -488,7 +488,7 @@ def main():
 
     
 
-    #distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    distance_matrix(sequences,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
     
     #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
       
