@@ -415,8 +415,8 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     '''
     #S_obs (X,Y)
     S_obs_seqs= [sequence0,sequence1]
-    S_obs, T_obs, rows_obs, columns_obs =  compute(S_obs_seqs, match, mismatch, gap)
-    S_obs, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S_obs, T_obs, rows_obs, columns_obs, S_obs_seqs[0], S_obs_seqs[1],'-')
+    S_obs_mat, T_obs, rows_obs, columns_obs =  compute(S_obs_seqs, match, mismatch, gap)
+    S_obs, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S_obs_mat, T_obs, rows_obs, columns_obs, S_obs_seqs[0], S_obs_seqs[1],'-')
     #print("Feng- Doolittle S_obs: ", S_obs)
     #Optimal Score S(X,X)
     S_id0_seqs= [sequence0,sequence0]
@@ -428,31 +428,30 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     S_id1_ops, match_no__id1, mismatch_no__id1, gap_no__id1, astring0__id1, astring1__id1 = traceback(S_id1, T_id1, rows_id1, columns_id1, S_id1_seqs[0], S_id1_seqs[1],'-')
     #S_id
     S_id= (S_id0_ops+S_id1_ops)/2
-    #print("Feng- Doolittle S_id: ",S_id)
 
     random_seqX, counterX= random_seq(L, 1)
     random_seqY, counterY= random_seq(L, 2)
 
+    counterX= Counter(sequence0)
+    counterY= Counter(sequence1)
+
     Ns= []
     for a in (["A","G","C","T"]):
-        NX= counterX[a]
-        #print (NX)
-        NY= counterY[a]
-        #print(NY)
-        Ns = np.append(Ns,(NX*NY*mismatch))
-        #print("N von a: ", Ns)
-    #print(Ns)
-    N= sum(Ns)
-    #print (N)
+        for b in (["A","G","C","T"]):
+            NX= counterX[a]
+            NY= counterY[b]
+
+            if a==b: 
+                Ns = np.append(Ns,(NX*NY*match))
+            else: 
+                Ns = np.append(Ns,(NX*NY*mismatch))
+    N= sum(Ns) 
     S_rand_seqs= [random_seqX, random_seqY]
-    #print(S_rand_seqs)
     S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
     S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1],'-')
 
-    S_rand= 1/L *N - gap_no_rand*gap
-    #print("Feng- Doolittle S_rand: ",S_rand)
+    S_rand= 1/L *N - gap_no*gap
     d= -math.log((S_obs-S_rand)/(S_id- S_rand))
-    #print("Distance: ",d)
     return d
 
 def distance_matrix(sequences,ids, filename, match, mismatch, gap, L): 
@@ -481,8 +480,7 @@ def distance_matrix(sequences,ids, filename, match, mismatch, gap, L):
                 d_matrix[i][j]= d
         d_matrix_df= pd.DataFrame(d_matrix, index=[1,2,3,4], columns=[1,2,3,4])
         print (f"Distance Matrix: \n{d_matrix_df}")
-        #for k in range(len(ids)):
-            #file_out.write(f"\n ID of Sequence {k+1}: {ids[k]}")
+
         file_out.write(f"\nDistance Matrix:\n {d_matrix_df}")
         file_out.close
 
@@ -495,19 +493,9 @@ def main():
     # get matrices and number of rows/columns
     profile1_0, profile1_1, profile2_0, profile2_1 = get_multiple_alignments(sequences,ids, match, mismatch, gap)
 
-    
-
-    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
-    
-    #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
-      
+    # compute feng-doolittle distance matrix
+    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=len(sequences[0]))
    
-    
-    
-    #S, T, rows, columns =  compute(sequences, match, mismatch, gap)
-    # get optimal alignment score as well as number of matches, mismatches and gaps and aligned strings
-    #opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, sequences[0], sequences[1])
-    #print("Optimal alignment score: ", opt_score)
     #call function to print and write output of needleman-wunsch
     visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment3_profile_alignment.txt", ids, match, mismatch, gap)
 
