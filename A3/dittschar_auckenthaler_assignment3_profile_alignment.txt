@@ -1,28 +1,28 @@
 
 1                                                          60
-AG-GAGGCTGATCCCCGCCGCCAGGGGCGGCGAGATCAGCATCCTG-TGCCA-GCC-CAG
-|* ***|***||***||**|****||||*|||****|||**||*** |||*| |** *||
-AT-CCTGGACATGGACGTGGTGGAGGGCAGCGCCGCCAGGTTCGAC-TGCAAGGTG-GAG
-|* ***** |  | |*|**|*****||||||**|***|| *|*|** |||***|** **|
-AGCGACAC-C--G-AGGCCGACATCGGCAGCAACCTGAG-GTGGGGCTGCGCCGCCGCCG
-||*|||*| |  | ||*||*||***|||*|***|*|||* |**|**||||**|*||*|||
-AGGGACCC-CGTGAAGACCCACGAGGGCTGGGGCGTGAT-GCTGCCCTGCAACCCCCCCG
+AGGAGGCTGATCCC-CGCCG--CCA-G-GGGC-GGCGAGATCA-GCATCCTGTGCCAGCC
+|**| || || |*| ||**|  ||     |*| **|| |  || |||*||||*|***|**
+ATCA-GC-GA-CAC-CGAGG--CC-----GAC-ATCG-G--CA-GCAACCTGAGGTGGGG
+|    |  || |*| *||*|  ||     |*| ***| |  *| || **|***|******
+A---GG--GACCCCGTGAAGACCCACGAGGGCTGGGGCG-TGATGC-TGCCCTGCAACCC
+|   *|  || |**| ||*| *****||||||*|*|*|| **|*|* |***||||||   
+ATCCTG--GA-CATG-GACG-TGGTGGAGGGCAGCGCCG-CCAGGT-TCGACTGCAA---
 61                                                         120
-GGCCGCCCCCAAGGCCACCATCCT-GTGG-AGC-AAGG--G-C-A----CCGAG-ATCCT
-|| |**||||*|**||****|**| |||| **| ||||  | | |    |||*| |****
-GG-CTACCCCGACCCCGAGGTGAT-GTGG-TTC-AAGGACGACAACC--CCGTG-AAGGA
- | * |*||| |** | ***||*| |*|| **| *||||*** *      ||*|  ****
--GCA-AGCCC-AGG-C-CCATGGT-GAGGTGGCTGAGGAACG-G------CGAGC-CCCT
- *|| **||| *|| | |***|*| *|||||||||**||||| |      |*|*| *|*|
-CCCACTACCC-CGG-C-CTGAGCTACAGGTGGCTGCTGAACGAGT--TCCCCAACTTCAT
-121                                          162
-GGGCA-ACAGCACCAG---G-GT---GAC--CGTGACCAG-C
-|*||| *||***||||   | *|   |||  *|*|**||* |
-GAGCAGGCACTTCCAGATCGACTAC-GACGAGGAGGGCAA-C
-|**|||*||* **|||  *    ** | *** |*| **** |
-GGCCAGCCAG-AACAG--G----GT-G-GAG-GTG-CTGGCC
-**|||*|*|* **|||  |    *| | ||| **| ****||
-CCCCACCGAC-GGCAG--GC-ACTTCGTGAGCCAG-ACCACC
+CAGGGCCGCC-CC--CAAGGCCA---CCATCCTGTGG-AGC--AA-G-G-GCACCGAGAT
+|*|*|||||| ||  ||||*|||   ||||**||*|| *||  *| | | *|**||||**
+CTGCGCCGCCGCCGGCAAGCCCAGGCCCATGGTGAGGTGGC-TGA-G-GAACGGCGAGCC
+|**||||**|**| *|** *||*|**|*| ***|*||**|| **| | |**|**|   **
+CCCCGCCCACTAC-CCCG-GCCTGAGCTA-CAGGTGGCTGCTGAACGAGTTCCCC---AA
+****|****|||| |||| *||*|||*|  *|*||||*|***|*||||***||||   ||
+GGTGGAGGGCTAC-CCCGACCCCGAGGT--GATGTGGTTCAAGGACGACAACCCCGTGAA
+121                                             165
+CCTGGGCA-ACAGC-AC--CAGGGTGACCG-TGA-CCAG-----C
+|||||*|| *|||  |*  |||||||***| ||  |**|     |
+CCTGGCCAGCCAG--AA--CAGGGTGGAGG-TG--CTGG----CC
+|*|***| *|||*  |*  ||||******| ||  |**|    ||
+CTTCATC-CCCACCGACGGCAGGCACTTCG-TGAGCCAGACCACC
+****|*| **|||***|*| |***|||*|| *||| *||**||*|
+GGAGAGCAGGCACTTCCAG-ATCGACTACGACGAG-GAGGGCAAC
 Match Score: 3
 Mismatch Score: -2
 Gap Penalty: 4

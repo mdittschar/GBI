@@ -168,7 +168,6 @@ def traceback(S, T, rows, columns, sequence0, sequence1 ,gap_c):
     match_no = 0
     mismatch_no = 0
     gap_no = 0
-    #------ ends at 0 be needs to be -1 
     # while we have not gone through the whole matrix
     while cur_col != 0 and cur_row != 0:
         if T[cur_row, cur_col] == "diagonal":
@@ -298,13 +297,11 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
         list_strings1.append(astring1)
         opt_scores = np.append(opt_scores, opt_score)
 
+    
     # get combinations into variable   
     combs = list(map(list,combinations([0,1,2,3],2)))
-    # print("opt_scores = ", opt_scores)
-    # print("List strings 0: ", list_strings0)
-
     # get the index of the optimal score
-    max_score_arg = np.argmin(opt_scores)
+    max_score_arg = np.argmax(opt_scores)
     # get the aligned sequence strings with optimal scores
     A_max = [list_strings0[max_score_arg], list_strings1[max_score_arg]]
     #a_rest_inds = [x for x in [0,1,2,3] if x not in combs[max_score_arg]]
@@ -313,6 +310,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     rest_ind = [i for i, x in enumerate(combs) if x[0] not in combs[max_score_arg] and x[1] not in combs[max_score_arg]][0]
     # and put them into a rest
     A_rest = [list_strings0[rest_ind], list_strings1[rest_ind]]
+    
     
     # in this part we get all possible cross-alignment-scores
     list_crossstrings0 = []
@@ -324,14 +322,13 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
         for j, rest_seq in enumerate(A_rest):
             S, T, rows, columns =  compute([max_seq, rest_seq], match, mismatch, gap)
             opt_score, match_no, mismatch_no, gap_no, astring0, astring1 = traceback(S, T, rows, columns, max_seq, rest_seq,'x')
-            #print("Astring 0: ", astring0)
             cross_opt_scores = np.append(cross_opt_scores, opt_score)
             list_crossstrings0.append(astring0)
             list_crossstrings1.append(astring1)
             
 
     #find out the optimal cross score 
-    max_cross_arg = np.argmin(cross_opt_scores)
+    max_cross_arg = np.argmax(cross_opt_scores)
 
     A_max_cross = np.array(list(str(list_crossstrings0[max_cross_arg])))
 
@@ -500,7 +497,7 @@ def main():
 
     
 
-    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
+    #distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=60)
     
     #d= feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L= 60)
       
