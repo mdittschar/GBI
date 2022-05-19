@@ -268,9 +268,9 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,
                 empty = " "*(seq_lens - pair_no*i)
                 alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
             # print the combined information
-            print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
+            print(f"\n{alignment_nos}\n{display_seq0} (Sequence 1)\n{display_alignment0}\n{display_seq1} (Sequence 2)\n{display_alignment1}\n{display_seq2} (Sequence 3)\n{display_alignment2}\n{display_seq3} (Sequence 4)")
             #Task 5 a) write it to textfile
-            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
+            file_out.write(f"\n{alignment_nos}\n{display_seq0} (Sequence 1)\n{display_alignment0}\n{display_seq1} (Sequence 2)\n{display_alignment1}\n{display_seq2} (Sequence 3)\n{display_alignment2}\n{display_seq3} (Sequence 4)")
                             #f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}"
             i = i + 1
         #Task 5 b) and c) write parameter to text file:
