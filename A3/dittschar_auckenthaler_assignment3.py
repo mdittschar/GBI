@@ -478,10 +478,6 @@ def main():
     # compute feng-doolittle distance matrix
     distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap)
    
-   
-    
-
-
 
 if __name__ == "__main__":
     try:
