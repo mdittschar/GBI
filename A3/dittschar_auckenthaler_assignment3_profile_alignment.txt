@@ -7,27 +7,27 @@
  MSA:
 1                                                          60
 ATCCTG--GA-CATG-GACG-TGGTGGAGGGCAGCGCCG-CCAGGT-TCGACTGCAA---
-|**| || || |*| ||**|  ||     |*| **|| |  || |||*||||*|***|**
+|   *|  || |**| ||*| *****||||||*|*|*|| **|*|* |***||||||   
 A---GG--GACCCCGTGAAGACCCACGAGGGCTGGGGCG-TGATGC-TGCCCTGCAACCC
 |    |  || |*| *||*|  ||     |*| ***| |  *| || **|***|******
 ATCA-GC-GA-CAC-CGAGG--CC-----GAC-ATCG-G--CA-GCAACCTGAGGTGGGG
-|   *|  || |**| ||*| *****||||||*|*|*|| **|*|* |***||||||   
+|**| || || |*| ||**|  ||     |*| **|| |  || |||*||||*|***|**
 AGGAGGCTGATCCC-CGCCG--CCA-G-GGGC-GGCGAGATCA-GCATCCTGTGCCAGCC
 61                                                         120
 GGTGGAGGGCTAC-CCCGACCCCGAGGT--GATGTGGTTCAAGGACGACAACCCCGTGAA
-|*|*|||||| ||  ||||*|||   ||||**||*|| *||  *| | | *|**||||**
+****|****|||| |||| *||*|||*|  *|*||||*|***|*||||***||||   ||
 CCCCGCCCACTAC-CCCG-GCCTGAGCTA-CAGGTGGCTGCTGAACGAGTTCCCC---AA
 |**||||**|**| *|** *||*|**|*| ***|*||**|| **| | |**|**|   **
 CTGCGCCGCCGCCGGCAAGCCCAGGCCCATGGTGAGGTGGC-TGA-G-GAACGGCGAGCC
-****|****|||| |||| *||*|||*|  *|*||||*|***|*||||***||||   ||
+|*|*|||||| ||  ||||*|||   ||||**||*|| *||  *| | | *|**||||**
 CAGGGCCGCC-CC--CAAGGCCA---CCATCCTGTGG-AGC--AA-G-G-GCACCGAGAT
 121                                             165
 GGAGAGCAGGCACTTCCAG-ATCGACTACGACGAG-GAGGGCAAC
-|||||*|| *|||  |*  |||||||***| ||  |**|     |
+****|*| **|||***|*| |***|||*|| *||| *||**||*|
 CTTCATC-CCCACCGACGGCAGGCACTTCG-TGAGCCAGACCACC
 |*|***| *|||*  |*  ||||******| ||  |**|    ||
 CCTGGCCAGCCAG--AA--CAGGGTGGAGG-TG--CTGG----CC
-****|*| **|||***|*| |***|||*|| *||| *||**||*|
+|||||*|| *|||  |*  |||||||***| ||  |**|     |
 CCTGGGCA-ACAGC-AC--CAGGGTGACCG-TGA-CCAG-----C
 Match Score: 3
 Mismatch Score: -2

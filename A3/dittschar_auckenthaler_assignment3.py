@@ -239,20 +239,20 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,
         while i*pair_no < seq_lens:
             # assign strings to be visualised
             # pair_no is number of pairs to visualise in one row
-            display_seq0 = tstring0[i*pair_no:(i+1)*pair_no]
-            display_seq1 = tstring1[i*pair_no:(i+1)*pair_no]
-            display_seq2 = tstring2[i*pair_no:(i+1)*pair_no]
-            display_seq3 = tstring3[i*pair_no:(i+1)*pair_no]
+            display_seq0 = tstring3[i*pair_no:(i+1)*pair_no]
+            display_seq1 = tstring2[i*pair_no:(i+1)*pair_no]
+            display_seq2 = tstring1[i*pair_no:(i+1)*pair_no]
+            display_seq3 = tstring0[i*pair_no:(i+1)*pair_no]
             # show alignment lines where matches are present
-            match_array0 = np.where(np.logical_and(np.array(list(tstring0))== np.array(list(tstring1)),np.array(list(tstring0)) != "-"), "|", " ")
-            match_array1 = np.where(np.logical_and(np.array(list(tstring1))== np.array(list(tstring2)),np.array(list(tstring1)) != "-"), "|", " ")
-            match_array2 = np.where(np.logical_and(np.array(list(tstring2))== np.array(list(tstring3)),np.array(list(tstring2)) != "-"), "|", " ")
-            no_gaps_array0 = np.logical_and(np.array(list(tstring0)) != "-", np.array(list(tstring1)) != "-")
-            no_gaps_array1 = np.logical_and(np.array(list(tstring1)) != "-", np.array(list(tstring2)) != "-")
-            no_gaps_array2 = np.logical_and(np.array(list(tstring2)) != "-", np.array(list(tstring3)) != "-")
-            display_alignment0 = "".join(np.where(np.logical_and(no_gaps_array0,np.array(list(tstring0)) != np.array(list(tstring1))), "*", match_array0)[i*pair_no:(i+1)*pair_no])
-            display_alignment1 = "".join(np.where(np.logical_and(no_gaps_array1, np.array(list(tstring1)) != np.array(list(tstring2))), "*", match_array1)[i*pair_no:(i+1)*pair_no])
-            display_alignment2 = "".join(np.where(np.logical_and(no_gaps_array2,np.array(list(tstring2)) != np.array(list(tstring3))), "*", match_array2)[i*pair_no:(i+1)*pair_no])
+            match_array0 = np.where(np.logical_and(np.array(list(tstring3))== np.array(list(tstring2)),np.array(list(tstring3)) != "-"), "|", " ")
+            match_array1 = np.where(np.logical_and(np.array(list(tstring2))== np.array(list(tstring1)),np.array(list(tstring2)) != "-"), "|", " ")
+            match_array2 = np.where(np.logical_and(np.array(list(tstring1))== np.array(list(tstring0)),np.array(list(tstring1)) != "-"), "|", " ")
+            no_gaps_array0 = np.logical_and(np.array(list(tstring3)) != "-", np.array(list(tstring2)) != "-")
+            no_gaps_array1 = np.logical_and(np.array(list(tstring2)) != "-", np.array(list(tstring1)) != "-")
+            no_gaps_array2 = np.logical_and(np.array(list(tstring1)) != "-", np.array(list(tstring0)) != "-")
+            display_alignment0 = "".join(np.where(np.logical_and(no_gaps_array0,np.array(list(tstring3)) != np.array(list(tstring2))), "*", match_array0)[i*pair_no:(i+1)*pair_no])
+            display_alignment1 = "".join(np.where(np.logical_and(no_gaps_array1, np.array(list(tstring2)) != np.array(list(tstring1))), "*", match_array1)[i*pair_no:(i+1)*pair_no])
+            display_alignment2 = "".join(np.where(np.logical_and(no_gaps_array2,np.array(list(tstring1)) != np.array(list(tstring0))), "*", match_array2)[i*pair_no:(i+1)*pair_no])
 
             #display_alignment0 = "".join(np.where(np.array(list(tstring0)) == '-', " ", match_array0)[i*pair_no:(i+1)*pair_no])
             #display_alignment1 = "".join(np.where(np.array(list(tstring1)) == '-', "i ", match_array1)[i*pair_no:(i+1)*pair_no])
@@ -270,8 +270,8 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,
             # print the combined information
             print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
             #Task 5 a) write it to textfile
-            file_out.write(f"\n{alignment_nos}\n{display_seq3}\n{display_alignment0}\n{display_seq2}\n{display_alignment1}\n{display_seq1}\n{display_alignment2}\n{display_seq0}")
-        
+            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
+                            #f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}"
             i = i + 1
         #Task 5 b) and c) write parameter to text file:
         print("Match Score: ",match)
