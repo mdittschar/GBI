@@ -429,8 +429,8 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     #S_id
     S_id= (S_id0_ops+S_id1_ops)/2
 
-    random_seqX, counterX= random_seq(L, 1)
-    random_seqY, counterY= random_seq(L, 2)
+    # random_seqX, counterX= random_seq(L, 1)
+    # random_seqY, counterY= random_seq(L, 2)
 
     counterX= Counter(sequence0)
     counterY= Counter(sequence1)
@@ -446,10 +446,11 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
             else: 
                 Ns = np.append(Ns,(NX*NY*mismatch))
     N= sum(Ns) 
-    S_rand_seqs= [random_seqX, random_seqY]
-    S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
-    S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1],'-')
+    # S_rand_seqs= [random_seqX, random_seqY]
+    # S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
+    # S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1],'-')
 
+    L = len(astring0)
     S_rand= 1/L *N - gap_no*gap
     d= -math.log((S_obs-S_rand)/(S_id- S_rand))
     return d
