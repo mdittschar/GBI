@@ -62,6 +62,27 @@ def get_args():
  
     return sequences_array,ids, match, mismatch, gap
 
+def random_seq(L, rs):
+    '''
+    Parameters:
+    ------------------
+    L: (int) length of random sequence
+    rs:(int) randomseed value
+
+    Return:
+    ----------------------
+    random_dna_seq (String) random generated sequence
+    counter (dic) value counts of bases in sequence
+    '''
+    random.seed(rs)
+    dna = ["A","G","C","T"]
+    random_dna_seq='' 
+    
+    for i in range(0,L):            
+        random_dna_seq+=random.choice(dna)
+
+    counter= Counter(random_dna_seq)
+    return random_dna_seq, counter
 
 def compute(sequences, match, mismatch, gap):
     """

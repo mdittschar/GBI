@@ -206,7 +206,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1 ,gap_c):
     return opt_score, match_no, mismatch_no, gap_no, tstring0, tstring1
 
   
-def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, match, mismatch, gap, pair_no=60 ):
+def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,ids, match, mismatch, gap, pair_no=60 ):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
     (TASK 5)
@@ -217,6 +217,7 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, matc
         tstring1 (str): aligned string of second sequence
         pair_no (int): number of aligned pairs to show in one row
         filename (String): tet.file name 
+        sequences (array): Array of original sequences
         id (): names of sequences
         match_no, (int): no. of matches in alignment
         mismatch_no (int): no of mismatches in alignment
@@ -231,8 +232,9 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, matc
     # continue while alignment is not fully visualised yet
 
     with open(filename, 'w') as file_out:
-        #for k in range(len(ids)):
-            #file_out.write(f"\n ID of Sequence {k+1}: {ids[k]}")
+        for k in range(len(ids)):
+            file_out.write(f"\n Original Sequence {k+1}: {sequences[k]}")
+        file_out.write(f"\n\n MSA:")
 
         while i*pair_no < seq_lens:
             # assign strings to be visualised
@@ -268,7 +270,7 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename, ids, matc
             # print the combined information
             print(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
             #Task 5 a) write it to textfile
-            file_out.write(f"\n{alignment_nos}\n{display_seq0}\n{display_alignment0}\n{display_seq1}\n{display_alignment1}\n{display_seq2}\n{display_alignment2}\n{display_seq3}")
+            file_out.write(f"\n{alignment_nos}\n{display_seq3}\n{display_alignment0}\n{display_seq2}\n{display_alignment1}\n{display_seq1}\n{display_alignment2}\n{display_seq0}")
         
             i = i + 1
         #Task 5 b) and c) write parameter to text file:
@@ -375,30 +377,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
     return  A_max_cross, A_max_noncross, A_rest_cross, A_rest_noncross
     
 
-
-def random_seq(L, rs):
-    '''
-    Parameters:
-    ------------------
-    L: (int) length of random sequence
-    rs:(int) randomseed value
-
-    Return:
-    ----------------------
-    random_dna_seq (String) random generated sequence
-    counter (dic) value counts of bases in sequence
-    '''
-    random.seed(rs)
-    dna = ["A","G","C","T"]
-    random_dna_seq='' 
-    
-    for i in range(0,L):            
-        random_dna_seq+=random.choice(dna)
-
-    counter= Counter(random_dna_seq)
-    return random_dna_seq, counter
-
-def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
+def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
     '''
     Parameters:
     ----------------
@@ -407,7 +386,6 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     match:(int)         match score
     mismatch:(int)      mismatch score
     gap: (int)          gap score
-    L: (Int)            Length of sequences
 
     Return:
     --------------
@@ -429,8 +407,6 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     #S_id
     S_id= (S_id0_ops+S_id1_ops)/2
 
-    # random_seqX, counterX= random_seq(L, 1)
-    # random_seqY, counterY= random_seq(L, 2)
 
     counterX= Counter(sequence0)
     counterY= Counter(sequence1)
@@ -455,7 +431,7 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap, L):
     d= -math.log((S_obs-S_rand)/(S_id- S_rand))
     return d
 
-def distance_matrix(sequences,ids, filename, match, mismatch, gap, L): 
+def distance_matrix(sequences,ids, filename, match, mismatch, gap): 
     '''
     Parameters:
     ------------
@@ -464,7 +440,6 @@ def distance_matrix(sequences,ids, filename, match, mismatch, gap, L):
     match (int)         match-score
     mismatch (int)      mismatch score
     gap (int)           gap-score
-    L(int)              lenth of random sequence 
 
     Return:
     --------------
@@ -476,11 +451,14 @@ def distance_matrix(sequences,ids, filename, match, mismatch, gap, L):
             for i in range(len(sequences)):
                 seqX= sequences[i]
                 seqY= sequences[j]
-                d= feng_doolittle_distance(seqX,seqY,match,mismatch, gap,L)
+                d= feng_doolittle_distance(seqX,seqY,match,mismatch, gap)
 
                 d_matrix[i][j]= d
         d_matrix_df= pd.DataFrame(d_matrix, index=[1,2,3,4], columns=[1,2,3,4])
-        print (f"Distance Matrix: \n{d_matrix_df}")
+
+        for k in range(len(ids)):
+            file_out.write(f"\n Original Sequence {k+1}: {sequences[k]}")
+        print (f"\n\nDistance Matrix: \n{d_matrix_df}")
 
         file_out.write(f"\nDistance Matrix:\n {d_matrix_df}")
         file_out.close
@@ -494,12 +472,13 @@ def main():
     # get matrices and number of rows/columns
     profile1_0, profile1_1, profile2_0, profile2_1 = get_multiple_alignments(sequences,ids, match, mismatch, gap)
 
-    # compute feng-doolittle distance matrix
-    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap, L=len(sequences[0]))
-   
     #call function to print and write output of needleman-wunsch
-    visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment3_profile_alignment.txt", ids, match, mismatch, gap)
+    visual_alignment(profile1_0, profile1_1, profile2_0, profile2_1, "dittschar_auckenthaler_assignment3_profile_alignment.txt", sequences, ids, match, mismatch, gap)
 
+    # compute feng-doolittle distance matrix
+    distance_matrix(sequences,ids,"dittschar_auckenthaler_assignment3_distance_matrix.txt",match, mismatch, gap)
+   
+   
     
 
 
