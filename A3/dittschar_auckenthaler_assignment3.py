@@ -209,7 +209,7 @@ def traceback(S, T, rows, columns, sequence0, sequence1 ,gap_c):
 def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,ids, match, mismatch, gap, pair_no=60 ):
     """
     Generate a visual alignment of two sequences following BLAST-alignment convention and write it to a text file
-    (TASK 5)
+   
 
     Parameters:
     -----------
@@ -283,6 +283,25 @@ def visual_alignment(tstring0, tstring1, tstring2, tstring3, filename,sequences,
       
 
 def get_multiple_alignments(sequences,ids, match, mismatch, gap):
+
+    """
+    Generate MSA aligned sequences TASK 3
+
+    Parameters:
+    -----------
+    sequences (array): array of sequences
+    id (String): names of sequences
+    match (int): match-score parameter
+    mismatch (int): mismatch- score parameter
+    gap (int): gap-score parameter
+
+    Retrun:
+    -----------
+    A_max_cross (String): aligned sequence 
+    A_max_noncross (String):aligned sequence 
+    A_rest_cross (String):aligned sequence 
+    A_rest_noncross (String):aligned sequence 
+    """
         
     # get matrices and number of rows/columns
     
@@ -379,6 +398,7 @@ def get_multiple_alignments(sequences,ids, match, mismatch, gap):
 
 def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
     '''
+    Calculate feng-doolittle distance (task 4)
     Parameters:
     ----------------
     sequence0:(String)  sequence 1 
@@ -407,7 +427,6 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
     #S_id
     S_id= (S_id0_ops+S_id1_ops)/2
 
-
     counterX= Counter(sequence0)
     counterY= Counter(sequence1)
 
@@ -422,9 +441,6 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
             else: 
                 Ns = np.append(Ns,(NX*NY*mismatch))
     N= sum(Ns) 
-    # S_rand_seqs= [random_seqX, random_seqY]
-    # S_rand_S, T_rand, rows_rand, columns_rand =  compute(S_rand_seqs, match, mismatch, gap)
-    # S_rand_obs, match_no_rand, mismatch_no_rand, gap_no_rand, astring0, astring1 = traceback(S_rand_S, T_rand, rows_rand, columns_rand, S_rand_seqs[0], S_rand_seqs[1],'-')
 
     L = len(astring0)
     S_rand= 1/L *N - gap_no*gap
@@ -433,6 +449,7 @@ def feng_doolittle_distance(sequence0, sequence1, match, mismatch, gap):
 
 def distance_matrix(sequences,ids, filename, match, mismatch, gap): 
     '''
+    calculate distance matrix Task 4 d
     Parameters:
     ------------
     sequences [array]   array of sequences from fasta file
