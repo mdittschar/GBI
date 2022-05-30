@@ -5,12 +5,15 @@ import pandas as pd
 import numpy as np
 import itertools
 
-def ccc(orig_dists, new_dists):
+def ccc(orig_dists, new_dists, num, no_files):
     """Computes CCC between two given dataframe matrices
 
     Args:
         orig_dists (pd.DataFrame): Original Distance Matrix
         new_dists (pd.DataFrame): Distance matrix of tree
+        num        (int):           number of sequences
+        no_files   (int):           number of files
+
 
     Returns:
         c (float): cophenetic correlation coefficient
@@ -18,7 +21,8 @@ def ccc(orig_dists, new_dists):
     orig_mean = np.mean(np.asarray(orig_dists).astype(float))
     new_mean = np.mean(np.asarray(new_dists).astype(float))
     numerator = []
-    numerator = np.append(numerator, 3*9)
+    #number of files here relevant?
+    numerator = np.append(numerator, 3* num)
     denominator_one = []
     denominator_two = []
     for i, val in enumerate(orig_dists.index):
@@ -57,7 +61,8 @@ def get_mat(arg):
                 else: 
                     line_vals = [float(i) for i in line[1:]] + [0]*(9-idx)                           
                 names.append(line[0])
-                values.append(np.array(line_vals))
+                values.append(np.array(line_vals))       
+        print(names)
     return names, values
         
 def open_dist():
@@ -68,10 +73,13 @@ def open_dist():
         dist_df_2 (pd.DataFrame): second comparison dataframe
         dist_df_3 (pd.DataFrame): third comparison dataframe
         mat_names (list of stirngs): File names
+        num        (int):           number of sequences
+        no_files   (int):           number of files
 
     """
     argv = sys.argv[1:]
     opts, _ = getopt.getopt(argv, "a:b:c:", ['file1', 'file2', 'file3'])
+    
     names_list = []
     values_list = []
     mat_names = []
@@ -85,17 +93,25 @@ def open_dist():
             
     
     dist_df_1 = pd.DataFrame(values_list[0], index=names_list[0])
+    no_names_df1= len (dist_df_1.index)
+   
     dist_df_2 = pd.DataFrame(values_list[1], index=names_list[1])
+    no_names_df2= len (dist_df_2.index)
     dist_df_3 = pd.DataFrame(values_list[2], index=names_list[2])
+    no_names_df3= len (dist_df_3.index)
+
+    if (no_names_df1 & no_names_df2 == no_names_df3):
+        num = no_names_df1
+    no_files= (len(opts))
     
-    return dist_df_1, dist_df_2, dist_df_3, mat_names
+    return dist_df_1, dist_df_2, dist_df_3, mat_names, num, no_files
 
 
 
 def main():
-    orig_dist_df, dist_df_1, dist_df_2, mat_names= open_dist()
-    c1 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_1)
-    c2 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_2)
+    orig_dist_df, dist_df_1, dist_df_2, mat_names, num, no_files = open_dist()
+    c1 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_1, num= num, no_files= no_files)
+    c2 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_2, num= num, no_files= no_files)
     print(f"CCC between {mat_names[0]} and {mat_names[1]} is: {c1}")
     print(f"CCC between {mat_names[0]} and {mat_names[2]} is: {c2}")
 
