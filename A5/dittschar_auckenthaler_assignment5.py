@@ -58,19 +58,19 @@ def open_dist():
             values_list.append(values)
             
     
-    dist_df_1 = pd.DataFrame(values_list[0], index=names_list[0])#, columns=names_list[0])
-    dist_df_2 = pd.DataFrame(values_list[1], index=names_list[1])#, columns=names_list[1])
-    dist_df_3 = pd.DataFrame(values_list[2], index=names_list[2])#, columns=names_list[2])
+    dist_df_1 = pd.DataFrame(values_list[0], index=names_list[0])
+    dist_df_2 = pd.DataFrame(values_list[1], index=names_list[1])
+    dist_df_3 = pd.DataFrame(values_list[2], index=names_list[2])
     
     return dist_df_1, dist_df_2, dist_df_3
 
 
 
 def main():
-    dist_df_1, dist_df_2, dist_df_3 = open_dist()
+    orig_dist_df, dist_df_1, dist_df_2 = open_dist()
     print(dist_df_2)
-    c1 = ccc(orig_dists = dist_df_1, new_dists=dist_df_1)
-    c2 = ccc(orig_dists = dist_df_1, new_dists=dist_df_2)
+    c1 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_1)
+    c2 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_2)
     print(f"C1 is: {c1}\nC2 is {c2}")
 
 
