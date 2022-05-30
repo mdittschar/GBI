@@ -7,21 +7,25 @@ import numpy as np
 def ccc(orig_dists, new_dists):
     return
 
+def get_df(arg):
+        values = []
+        names = []
+        with open(arg) as file_in:
+            for line in csv.reader(file_in, delimiter="\t"):    
+                if len(line) > 1:                                  
+                    names.append(line[0])
+                    values.append(line[1:])
+        dist_df = pd.DataFrame(values, index=names, columns=names)
 def open_dist():
     argv = sys.argv[1:]
     opts, _ = getopt.getopt(argv, "a:b:c:", ['file1', 'file2', 'file3'])
     for opt, arg in opts:
         if opt in ["-a", "--file1", "-b", "--file2", "-c", "--file3"]:
             print(f"File1: {arg}")
-            values = []
-            names = []
-            with open(arg) as file_in:
-                for line in csv.reader(file_in, delimiter="\t"):    
-                    if len(line) > 1:                                  
-                        names.append(line[0])
-                        values.append(line[1:])
-            dist_df = pd.DataFrame(values, index=names, columns=names)
-            print(dist_df)
+            dist_df = get_df(arg)
+
+            
+    return dist_df
 
 
 
