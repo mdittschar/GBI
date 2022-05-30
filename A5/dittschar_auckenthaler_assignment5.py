@@ -62,7 +62,6 @@ def get_mat(arg):
                     line_vals = [float(i) for i in line[1:]] + [0]*(9-idx)                           
                 names.append(line[0])
                 values.append(np.array(line_vals))       
-        print(names)
     return names, values
         
 def open_dist():
@@ -103,7 +102,7 @@ def open_dist():
     if (no_names_df1 & no_names_df2 == no_names_df3):
         num = no_names_df1
     no_files= (len(opts))
-    
+
     return dist_df_1, dist_df_2, dist_df_3, mat_names, num, no_files
 
 
