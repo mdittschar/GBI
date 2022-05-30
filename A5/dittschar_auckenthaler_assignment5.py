@@ -8,10 +8,24 @@ import itertools
 def ccc(orig_dists, new_dists):
     orig_mean = np.mean(np.asarray(orig_dists).astype(float))
     new_mean = np.mean(np.asarray(new_dists).astype(float))
+    numerator = []
+    numerator = np.append(numerator, 3*9)
+    denominator_one = []
+    denominator_two = []
     for i, val in enumerate(orig_dists.index):
         for j in np.arange(i+1):
-            print("idx:",orig_dists.loc[orig_dists.index[i], j])
-    return
+            numerator_one = orig_dists.loc[val, j] - orig_mean
+            numerator_two = new_dists.loc[val, j] - new_mean
+            
+            numerator = np.append(numerator, numerator_one * numerator_two)
+            denominator_one = np.append(denominator_one, numerator_one * numerator_one)
+            denominator_two = np.append(denominator_two, numerator_two * numerator_two)
+    numerator_sum = sum(numerator)
+    denominator_sum_one = sum(denominator_one)
+    denominator_sum_two = sum(denominator_two)
+
+    c = numerator_sum/(np.sqrt(denominator_sum_one*denominator_sum_two))
+    return c
 
 def get_mat(arg):
         values = []
@@ -23,7 +37,7 @@ def get_mat(arg):
                         first_val = line[1]
                         line_vals = [float(first_val)] + [0]*(9-idx)
                     else: 
-                        line_vals = line[1:] + [0]*(9-idx)
+                        line_vals = [float(i) for i in line[1:]] + [0]*(9-idx)
                     print("Name: ",line[0])                             
                     names.append(line[0])
                     
@@ -55,7 +69,9 @@ def open_dist():
 def main():
     dist_df_1, dist_df_2, dist_df_3 = open_dist()
     print(dist_df_2)
-    ccc(orig_dists = dist_df_1, new_dists=dist_df_2)
+    c1 = ccc(orig_dists = dist_df_1, new_dists=dist_df_1)
+    c2 = ccc(orig_dists = dist_df_1, new_dists=dist_df_2)
+    print(f"C1 is: {c1}\nC2 is {c2}")
 
 
 
