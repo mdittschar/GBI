@@ -6,6 +6,15 @@ import numpy as np
 import itertools
 
 def ccc(orig_dists, new_dists):
+    """Computes CCC between two given dataframe matrices
+
+    Args:
+        orig_dists (pd.DataFrame): Original Distance Matrix
+        new_dists (pd.DataFrame): Distance matrix of tree
+
+    Returns:
+        c (float): cophenetic correlation coefficient
+    """
     orig_mean = np.mean(np.asarray(orig_dists).astype(float))
     new_mean = np.mean(np.asarray(new_dists).astype(float))
     numerator = []
@@ -28,21 +37,39 @@ def ccc(orig_dists, new_dists):
     return c
 
 def get_mat(arg):
-        values = []
-        names = []
-        with open(arg) as file_in:
-            for idx, line in enumerate(csv.reader(file_in, delimiter="\t")):
-                if idx >0:
-                    if idx == 1:
-                        first_val = line[1]
-                        line_vals = [float(first_val)] + [0]*(9-idx)
-                    else: 
-                        line_vals = [float(i) for i in line[1:]] + [0]*(9-idx)                           
-                    names.append(line[0])
-                    values.append(np.array(line_vals))
-        return names, values
+    """get names and values of distance matrix
+
+    Args:
+        arg (file name): file name of matrix
+
+    Returns:
+        names (list of strings): sequence names
+        values (array of floats): Values for each sequence
+    """
+    values = []
+    names = []
+    with open(arg) as file_in:
+        for idx, line in enumerate(csv.reader(file_in, delimiter="\t")):
+            if idx >0:
+                if idx == 1:
+                    first_val = line[1]
+                    line_vals = [float(first_val)] + [0]*(9-idx)
+                else: 
+                    line_vals = [float(i) for i in line[1:]] + [0]*(9-idx)                           
+                names.append(line[0])
+                values.append(np.array(line_vals))
+    return names, values
         
 def open_dist():
+    """open dist files with given console arguments
+
+    Returns:
+        dist_df_1 (pd.DataFrame): first comparison dataframe
+        dist_df_2 (pd.DataFrame): second comparison dataframe
+        dist_df_3 (pd.DataFrame): third comparison dataframe
+        mat_names (list of stirngs): File names
+
+    """
     argv = sys.argv[1:]
     opts, _ = getopt.getopt(argv, "a:b:c:", ['file1', 'file2', 'file3'])
     names_list = []
@@ -79,4 +106,4 @@ if __name__ == "__main__":
     try:
         main()
     except:
-        print("Try python dittschar_auckenthaler_assignment5.py")
+        print("Try python dittschar_auckenthaler_assignment5.py -a <original_distance> -b <first_tree_distance> -c <second_tree_distance>")
