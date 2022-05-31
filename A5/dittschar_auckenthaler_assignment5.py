@@ -22,7 +22,6 @@ def ccc(orig_dists, new_dists):
     full_original = half_original + half_original.T
     half_new = np.asarray(new_dists).astype(float)
     full_new = half_new + half_new.T
-    print("Full new: ", full_new)
     orig_mean = np.mean(full_original)
     new_mean = np.mean(full_new)
     numerator = []
@@ -89,18 +88,19 @@ def open_dist():
     names_list = []
     values_list = []
     mat_names = []
+    fileno =1
     for opt, arg in opts:
         if opt in ["-a", "--file1", "-b", "--file2", "-c", "--file3"]:
-            print(f"File1: {arg}")
+            print(f"File {fileno}: {arg}")
             names, values = get_mat(arg)
             names_list.append(names)
             values_list.append(values)
             mat_names.append(arg)
+            fileno = fileno + 1
             
     
     dist_df_1 = pd.DataFrame(values_list[0], index=names_list[0])
     no_names_df1= len (dist_df_1.index)
-    print(dist_df_1)
     dist_df_2 = pd.DataFrame(values_list[1], index=names_list[1])
     no_names_df2= len (dist_df_2.index)
     dist_df_3 = pd.DataFrame(values_list[2], index=names_list[2])
