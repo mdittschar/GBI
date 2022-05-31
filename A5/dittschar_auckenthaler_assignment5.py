@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import itertools
 
-def ccc(orig_dists, new_dists, num, no_files):
+def ccc(orig_dists, new_dists):
     """Computes CCC between two given dataframe matrices
 
     Args:
@@ -18,11 +18,14 @@ def ccc(orig_dists, new_dists, num, no_files):
     Returns:
         c (float): cophenetic correlation coefficient
     """
-    orig_mean = np.mean(np.asarray(orig_dists).astype(float))
-    new_mean = np.mean(np.asarray(new_dists).astype(float))
+    half_original = np.asarray(orig_dists).astype(float)
+    full_original = half_original + half_original.T
+    half_new = np.asarray(new_dists).astype(float)
+    full_new = half_new + half_new.T
+    print("Full new: ", full_new)
+    orig_mean = np.mean(full_original)
+    new_mean = np.mean(full_new)
     numerator = []
-    #number of files here relevant?
-    numerator = np.append(numerator, 3* num)
     denominator_one = []
     denominator_two = []
     for i, val in enumerate(orig_dists.index):
@@ -54,8 +57,9 @@ def get_mat(arg):
     names = []
     with open(arg) as file_in:
         for idx, line in enumerate(csv.reader(file_in, delimiter="\t")):
-            if idx >0:
-                if idx == 1:
+                if idx == 0:
+                    line_vals = []
+                elif idx == 1:
                     first_val = line[1]
                     line_vals = [float(first_val)] #+ [0]*(9-idx)
                 else: 
@@ -96,7 +100,7 @@ def open_dist():
     
     dist_df_1 = pd.DataFrame(values_list[0], index=names_list[0])
     no_names_df1= len (dist_df_1.index)
-   
+    print(dist_df_1)
     dist_df_2 = pd.DataFrame(values_list[1], index=names_list[1])
     no_names_df2= len (dist_df_2.index)
     dist_df_3 = pd.DataFrame(values_list[2], index=names_list[2])
@@ -106,14 +110,14 @@ def open_dist():
         num = no_names_df1
     no_files= (len(opts))
 
-    return dist_df_1, dist_df_2, dist_df_3, mat_names, num, no_files
+    return dist_df_1, dist_df_2, dist_df_3, mat_names
 
 
 
 def main():
-    orig_dist_df, dist_df_1, dist_df_2, mat_names, num, no_files = open_dist()
-    c1 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_1, num= num, no_files= no_files)
-    c2 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_2, num= num, no_files= no_files)
+    orig_dist_df, dist_df_1, dist_df_2, mat_names = open_dist()
+    c1 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_1)
+    c2 = ccc(orig_dists = orig_dist_df, new_dists=dist_df_2)
     print(f"CCC between {mat_names[0]} and {mat_names[1]} is: {c1}")
     print(f"CCC between {mat_names[0]} and {mat_names[2]} is: {c2}")
 
