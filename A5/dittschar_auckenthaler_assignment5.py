@@ -3,7 +3,6 @@ import sys
 import csv
 import pandas as pd
 import numpy as np
-import itertools
 
 def ccc(orig_dists, new_dists):
     """Computes CCC between two given dataframe matrices
