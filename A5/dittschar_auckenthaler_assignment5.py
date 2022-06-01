@@ -59,9 +59,9 @@ def get_mat(arg):
                     line_vals = []
                 elif idx == 1:
                     first_val = line[1]
-                    line_vals = [float(first_val)] #+ [0]*(9-idx)
+                    line_vals = [float(first_val)]
                 else: 
-                    line_vals = [float(i) for i in line[1:]] #+ [0]*(9-idx)                           
+                    line_vals = [float(i) for i in line[1:]]                     
                 names.append(line[0])
                 values.append(np.array(line_vals))  
     for  row, vals in enumerate(values):
