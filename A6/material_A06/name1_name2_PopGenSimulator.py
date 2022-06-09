@@ -1,3 +1,4 @@
+#from curses import keyname
 import sys
 import random  # needed in simulate_previous_generation
 import itertools
@@ -19,8 +20,30 @@ class PopGenSimulator:
         :param current_generation: String
         :return: previous_generation
         """
-        print(list(itertools.combinations(list(current_generation), 2)))
+        parent_directory = dict()
+        print("Parent dict: ", parent_directory)
+        for i in list(current_generation):
+            subset_generation = [s for s in list(current_generation) if s != i]
+            parent = random.choice(subset_generation)
+            print("Parent is: ", parent) 
+            
+            if parent not in parent_directory:
+                parent_directory[parent] = i
+            elif type(parent_directory[parent]) == "<class 'list'>":
+                parent_directory[parent] = parent_directory[parent] +[i]
+            else:
+                parent_directory[parent] = [parent_directory[parent]] +[i]
+            print("Type: ", type(parent_directory[parent]))
+            print("Parent_directory: ", parent_directory)
+        new_gen = list()
+        for i in list(current_generation):
+            if i in parent_directory:
+                new_gen = new_gen+ [i]
+            else:
+                new_gen = new_gen + ["-"]
+        print("New gen: ",new_gen)
         waiting_time =- math.comb(len(current_generation), 2)**(-1)*np.log(np.random.uniform(0,1))
+
         return waiting_time
 
     def is_MRCA_of_all_found(self, current_generation):
@@ -63,8 +86,11 @@ def main():
         """
     # except:
     #     print('run name1_name2_PopGenSimulator.py 4')
-    waiting_time = pop_gen_simulator.simulate_previous_generation(current_generation = "abcdefg")
-    genes = ["a","b","c","d","e","f","g"]
+    genes = "abcdefghijklm"
+    genes = genes[:size]
+    print(genes)
+    waiting_time = pop_gen_simulator.simulate_previous_generation(current_generation = genes)
+    genes = ["a","b","c","d","e","f","g", "h", "i", "j", "k"]
     genes = genes[:size]
     print("Waiting time: ", waiting_time)
     
