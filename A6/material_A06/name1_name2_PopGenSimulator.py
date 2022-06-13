@@ -9,7 +9,7 @@ class PopGenSimulator:
     def __init__(self, size):
         self.size = size  # population size
 
-    def simulate_previous_generation(self, current_generation):
+    def simulate_previous_generation(self, current_generation, prev_waiting_time, gen_no):
         """
         given a string of letters, each letter representing one individual,
         randomly generate previous generation. For this use use the exponential distribution exp(k(k-1)/2) for the waiting times.
@@ -20,31 +20,51 @@ class PopGenSimulator:
         :param current_generation: String
         :return: previous_generation
         """
-        parent_directory = dict()
-        print("Parent dict: ", parent_directory)
-        for i in list(current_generation):
-            subset_generation = [s for s in list(current_generation) if s != i]
-            parent = random.choice(subset_generation)
-            print("Parent is: ", parent) 
-            
-            if parent not in parent_directory:
-                parent_directory[parent] = i
-            elif type(parent_directory[parent]) == "<class 'list'>":
-                parent_directory[parent] = parent_directory[parent] +[i]
-            else:
-                parent_directory[parent] = [parent_directory[parent]] +[i]
-            print("Type: ", type(parent_directory[parent]))
-            print("Parent_directory: ", parent_directory)
-        new_gen = list()
-        for i in list(current_generation):
-            if i in parent_directory:
-                new_gen = new_gen+ [i]
-            else:
-                new_gen = new_gen + ["-"]
-        print("New gen: ",new_gen)
-        waiting_time =- math.comb(len(current_generation), 2)**(-1)*np.log(np.random.uniform(0,1))
+        
+        list_cur_gen = list(current_generation)
+        
 
-        return waiting_time
+        total_waiting_time = prev_waiting_time
+        parent_directory = dict()
+        waiting_time =- (math.comb(len(list_cur_gen), 2)**(-1))*np.log(np.random.uniform(0,1))
+        if len(list_cur_gen) == 2:
+            used_waiting_time = 0
+        else: 
+            used_waiting_time = waiting_time
+
+        while total_waiting_time + used_waiting_time <= -gen_no + 1 and len(list_cur_gen) > 1:
+            gen_combs = [i for i in itertools.combinations(list_cur_gen, 2)]
+            print("Gen combs: ", gen_combs)
+            
+            total_waiting_time = total_waiting_time + waiting_time
+            #print("Current waiting time: ", total_waiting_time)
+            choice = random.choice(gen_combs)
+            parent = choice[0]
+            child = choice[1]
+
+            #print("Parent directory is: ", parent_directory)
+            if parent not in parent_directory:
+                parent_directory[parent] = [child]
+            elif isinstance(parent_directory[parent], list):
+                
+                parent_directory[parent] = parent_directory[parent] + [child]
+            else:
+                parent_directory[parent] = [parent_directory[parent]] + [child]
+            waiting_time =- (math.comb(len(list_cur_gen), 2)**(-1))*np.log(np.random.uniform(0,1))
+            list_cur_gen = [i for i in list_cur_gen if i != child and i != parent]
+            print("Total waiting time: ", total_waiting_time)
+            print("Current waiting time: ", used_waiting_time)
+                
+            
+        #print("Parent directory: ", parent_directory)
+        cur_string = "".join([k if k in parent_directory else "-" for k in list(current_generation) ])
+        #print(cur_string)
+        parent_directory = dict(sorted(parent_directory.items()))
+        print("Parent dict:", parent_directory)
+        output_nextgen = "".join([k for k in parent_directory])
+
+        #print("Output next gen: ", output_nextgen)
+        return total_waiting_time, output_nextgen
 
     def is_MRCA_of_all_found(self, current_generation):
         """
@@ -52,8 +72,11 @@ class PopGenSimulator:
         :param current_generation: int
         :return:
         """
-        # PLEASE IMPLEMENT
-        pass
+        if len([i for i in current_generation if i != "-"]) <= 1:
+            bool = True
+        else:
+            bool = False
+        return bool
 
     def make_initial_generation(self, size):
         """
@@ -61,8 +84,16 @@ class PopGenSimulator:
         :param size: int
         :return:
         """
-        # PLEASE IMPLEMENT
-        pass
+        genes = "abcdefghijklm"
+        genes = genes[:size]
+        return genes
+
+    def string_output(self, current_generation, original_generation, gen_no):
+        cur_string = "".join([k if k in current_generation else "-" for k in list(original_generation) ])
+        if gen_no == 0:
+            gen_no = " 0"
+        print(f"{gen_no}  {cur_string}")
+
 
 
 def main():
@@ -86,13 +117,19 @@ def main():
         """
     # except:
     #     print('run name1_name2_PopGenSimulator.py 4')
-    genes = "abcdefghijklm"
-    genes = genes[:size]
-    print(genes)
-    waiting_time = pop_gen_simulator.simulate_previous_generation(current_generation = genes)
-    genes = ["a","b","c","d","e","f","g", "h", "i", "j", "k"]
-    genes = genes[:size]
-    print("Waiting time: ", waiting_time)
+
+    genes = pop_gen_simulator.make_initial_generation(size)
+    next_gen = genes
+    gen_no = 0
+    pop_gen_simulator.string_output(next_gen, genes, gen_no)
+    waiting_time = 0
+    while not pop_gen_simulator.is_MRCA_of_all_found(next_gen):
+        waiting_time, next_gen = pop_gen_simulator.simulate_previous_generation(next_gen, waiting_time, gen_no)
+        print("Next gen: ", next_gen)
+        gen_no = gen_no -1
+        pop_gen_simulator.string_output(next_gen, genes, gen_no)
+
+
     
 
 
