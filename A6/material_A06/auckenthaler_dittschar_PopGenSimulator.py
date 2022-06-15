@@ -21,8 +21,8 @@ class PopGenSimulator:
         :param current_generation: String
         :return: previous_generation
         """
-        # set random seed to make the results reproducalbe       
-        np.random.seed(50)
+        # set random seed to make the results reproducalbe     
+        #np.random.seed(50)
         # make a list out of the current generation for workability
         list_cur_gen = list(current_generation)
 
