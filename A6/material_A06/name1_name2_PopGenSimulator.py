@@ -21,8 +21,7 @@ class PopGenSimulator:
         :param current_generation: String
         :return: previous_generation
         """
-        # set random seed
-        
+        # set random seed        
         random.seed(0)
         # make a list out of the current generation for workability
         list_cur_gen = list(current_generation)
@@ -64,6 +63,7 @@ class PopGenSimulator:
         :param current_generation: int
         :return:
         """
+        # find out the length of current genneration excluding dashes
         if len([i for i in current_generation if i != "-"]) <= 1:
             bool = True
         else:
@@ -77,15 +77,40 @@ class PopGenSimulator:
         :return:
         """
         genes = "abcdefghijklmnopqrstuvwxy"
+        # take first size characters of genes
         genes = genes[:size]
         return genes
 
     def string_output(self, current_generation, original_generation, gen_no):
+        """For a given generation, print out the string 
+
+        Args:
+            current_generation (list): list of genes currently in the gene pool
+            original_generation (string): original genes in the first considered generation
+            gen_no (int): number of generations back
+        """
+        # replace every letter of the original generation that isn't in the current generation with a dash
         cur_string = "".join([k if k in current_generation else "-" for k in list(original_generation) ])
+        # makes the string output look more uniform by placing a space before the 0
         if gen_no == 0:
             gen_no = " 0"
         print(f"{gen_no}  {cur_string}")
+    
+    def plot_treesizes(self, sizes, median_arr):
+        """Given an array of tree sizes, make a scatter plot of those vs. predicted viszes
 
+        Args:
+            sizes (np.array of ints): sizes to consider
+            median_arr (np.array): array of medians
+        """
+        plt.scatter(sizes, median_arr, label="Random trees")
+        plt.scatter(sizes, [2*(1-1/n) for n in sizes], label="Expected trees")
+        plt.title("Randomly generated vs. Expected tree sizes - Median of 3 runs")
+        plt.ylim(0,None)
+        plt.legend()
+        plt.savefig("auckenthaler_dittschar_median_vs_expected_trees.png")
+        plt.show()
+        
 
 
 def main():
@@ -131,15 +156,8 @@ def main():
             print()
             wait_arr = np.append(wait_arr,total_waiting_time)
         median_arr = np.append(median_arr, np.median(wait_arr))
-    plt.scatter(sizes, median_arr, label="Random trees")
-    plt.scatter(sizes, [2*(1-1/n) for n in sizes], label="Expected trees")
-    plt.title("Randomly generated vs. Expected tree sizes - Median of 3 runs")
-    plt.ylim(0,None)
-    plt.legend()
-    plt.show()
-
-
-    
+    pop_gen_simulator.plot_treesizes(sizes= sizes, median_arr = median_arr)
+  
 
 
 if __name__ == "__main__":
