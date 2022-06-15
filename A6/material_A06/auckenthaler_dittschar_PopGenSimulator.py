@@ -22,8 +22,8 @@ class PopGenSimulator:
         :return: previous_generation
         """
         # set random seed to make the results reproducalbe       
-        random.seed(0)
-        np.random.seed(0)
+        random.seed(1)
+        np.random.seed(50)
         # make a list out of the current generation for workability
         list_cur_gen = list(current_generation)
 
@@ -109,6 +109,8 @@ class PopGenSimulator:
         plt.scatter(sizes, median_arr, label="Random trees")
         plt.scatter(sizes, [2*(1-1/n) for n in sizes], label="Expected trees")
         plt.title("Randomly generated vs. Expected tree sizes - Median of 3 runs")
+        plt.xlabel("Number of genes")
+        plt.ylabel("Tree height")
         plt.ylim(0,None)
         plt.legend()
         plt.savefig("auckenthaler_dittschar_median_vs_expected_trees.png")
