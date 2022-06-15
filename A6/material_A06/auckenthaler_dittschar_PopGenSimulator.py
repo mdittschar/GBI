@@ -21,8 +21,9 @@ class PopGenSimulator:
         :param current_generation: String
         :return: previous_generation
         """
-        # set random seed        
+        # set random seed to make the results reproducalbe       
         random.seed(0)
+        np.random.seed(0)
         # make a list out of the current generation for workability
         list_cur_gen = list(current_generation)
 
@@ -33,7 +34,9 @@ class PopGenSimulator:
             waiting_time = - (math.comb(len(list_cur_gen), 2)**(-1))*np.log(np.random.uniform(0,1))
             gen_combs = [i for i in itertools.combinations(list_cur_gen, 2)]
             #choose a random pair that coalesces
+            random.seed(0)
             choice = random.choice(gen_combs)
+           # print('Choice', choice)
             parent = choice[0]
             child = choice[1]
             # if parent not in parent_directory:
