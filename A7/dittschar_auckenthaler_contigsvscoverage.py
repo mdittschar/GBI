@@ -9,6 +9,6 @@ for theta in thetas:
     plt.plot(c,np.exp(-c*(1-theta))*N, label=f"theta = {theta}")
 plt.title("Expected Number of Contigs by Coverage and Minimal Overlap")
 plt.xlabel("Coverage")
-plt.ylabel("Expected number of contigs")
+plt.ylabel("G/L")
 plt.legend()
 plt.show()
