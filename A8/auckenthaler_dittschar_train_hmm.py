@@ -29,5 +29,21 @@ for opt, arg in opts:
             i = i + 1
 
 
-allses = "".join(ses)
-print(allses)
+allses = np.array(list("".join(ses)))
+
+trans_mat = np.zeros((2,2))
+for s in ses:
+    for i, n in enumerate(s):
+        if len(s) - 1 > i:
+            if n == "G" and s[i+1] == "G":
+                trans_mat[0,0] = trans_mat[0,0] + 1
+            elif n == "C" and s[i+1] == "G":
+                trans_mat[1,0] = trans_mat[1,0] + 1
+            elif n == "C" and s[i+1] == "C":
+                trans_mat[1,1] = trans_mat[1,1] + 1
+            else:
+                trans_mat[0,1] = trans_mat[0,1] + 1
+
+trans_mat[0,:] = trans_mat[0,:]/sum(trans_mat[0,:])
+trans_mat[1,:] = trans_mat[1,:]/sum(trans_mat[1,:])
+print(trans_mat)
