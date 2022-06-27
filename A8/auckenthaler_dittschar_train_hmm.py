@@ -73,9 +73,6 @@ G C * + \n\
 # Transition matrix P:\n\
 {trans_mat}"
 
-# write to console
-print(output_string)
-
 # write to file
 with open(f"{matname}.txt", "w") as f: 
     f.write(output_string)
