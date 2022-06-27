@@ -8,33 +8,44 @@ from Bio import SeqIO
 # fasta reader from console taken from our solution for A3
 argv = sys.argv[1:]
 # get a tuple of the arguments to use
-opts, _ = getopt.getopt(argv, "f:", ['file'])
+opts, _ = getopt.getopt(argv, "f:n:", ['file', 'name'])
 ses = [None] * 10
 
 ids = []
 i = 0
 for opt, arg in opts:
     if opt in ["-f", "--file1"]:
-        print(f"File No {i+1}: {arg}")
         # use Biopython parser for sequences
         for record in SeqIO.parse(arg, "fasta"):
-            print("record: ", i)
             se = record.seq
             
             id = record.id
             ids = np.append(ids, id)
-
+            # get sequences
             ses[i] = str(se)
 
             i = i + 1
+    # get new transition matrix name
+    elif opt in ["-n", "--name"]:
+        matname = arg
+# # join all sequences together for probability computation
+# allses = np.array(list("".join(ses)))
 
-
-allses = np.array(list("".join(ses)))
-
-trans_mat = np.zeros((2,2))
+# define number of rows
+rows = 4
+trans_mat = np.zeros((rows, rows))
+# for every sequence
 for s in ses:
+    # for every character in each sequence
     for i, n in enumerate(s):
-        if len(s) - 1 > i:
+        # if it's the first character, append to "b" row
+        if i == 0:
+            if n == "G":
+                trans_mat[2,0] = trans_mat[2,0] + 1
+            else: 
+                trans_mat[2,1] = trans_mat[2,1] + 1
+        # if it's not the end character, append to corresponding row and column
+        elif len(s) - 1 > i:
             if n == "G" and s[i+1] == "G":
                 trans_mat[0,0] = trans_mat[0,0] + 1
             elif n == "C" and s[i+1] == "G":
@@ -43,7 +54,28 @@ for s in ses:
                 trans_mat[1,1] = trans_mat[1,1] + 1
             else:
                 trans_mat[0,1] = trans_mat[0,1] + 1
+        # in the end, append transition from nucleotide to end
+        else:
+            if n == "G":
+                trans_mat[0, 3] = trans_mat[0,3] + 1
+            else: 
+                trans_mat[1, 3] = trans_mat[1, 3] + 1
+            trans_mat[3, 3] = 1
+# divide by the total of each row
+for row in np.arange(rows):
+    trans_mat[row,:] = trans_mat[row,:]/sum(trans_mat[row,:])
 
-trans_mat[0,:] = trans_mat[0,:]/sum(trans_mat[0,:])
-trans_mat[1,:] = trans_mat[1,:]/sum(trans_mat[1,:])
-print(trans_mat)
+# format the output string
+output_string = f"# Number of states:\n\
+{rows}\n\
+# State labels: *=b, +=e\n\
+G C * + \n\
+# Transition matrix P:\n\
+{trans_mat}"
+
+# write to console
+print(output_string)
+
+# write to file
+with open(f"{matname}.txt", "w") as f: 
+    f.write(output_string)
