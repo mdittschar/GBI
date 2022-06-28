@@ -60,8 +60,8 @@ for s in ses:
 # divide by the total of each row
 for row in np.arange(rows):
     trans_mat[row,:] = trans_mat[row,:]/sum(trans_mat[row,:])
-# replace cells in transition matrix by very small value where it is zero
-trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
+# # replace cells in transition matrix by very small value where it is zero
+# trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
 # format the output string
 output_string = f"# The transition matrix can be found in the numpy file: {matname}_only.npy\n\
 # Number of states:\n\
