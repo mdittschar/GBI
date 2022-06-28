@@ -3,6 +3,7 @@ import sys
 import getopt
 import Bio
 from Bio import SeqIO
+import pandas as pd
 
 argv = sys.argv[1:]
 # get a tuple of the arguments to use
@@ -11,9 +12,13 @@ opts, _ = getopt.getopt(argv, "a:b:i:", ['matrix1', 'matrix2', 'input'])
 
 for opt, arg in opts:
     if opt in ["-a", "--matrix1"]:
-        plusmat = np.load(arg)
+        plusmat = pd.read_csv(arg , sep='  ', skiprows=6, names=['G','C','*','+'],engine='python')
+        plusmat = plusmat.to_numpy().astype(np.float64)
+    
     if opt in ["-b", "--matrix2"]:
-        minmat = np.load(arg)
+        minmat = pd.read_csv(arg , sep='  ', skiprows=6, names=['G','C','*','+'],engine='python')
+        minmat = minmat.to_numpy()
+       
     # get new transition matrix name
     elif opt in ["-i", "--input"]:
         
@@ -21,8 +26,8 @@ for opt, arg in opts:
                 se = record.seq
                 input = list(str(se))       
 
-
 allmats = np.array([plusmat, minmat])
+
 for i, val in enumerate(input):
     if i == 0: 
         if val == "G":

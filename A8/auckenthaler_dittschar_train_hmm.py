@@ -3,6 +3,7 @@ import sys
 import getopt
 import Bio
 from Bio import SeqIO
+import pandas as pd
 
 
 # fasta reader from console taken from our solution for A3
@@ -62,17 +63,25 @@ for row in np.arange(rows):
     trans_mat[row,:] = trans_mat[row,:]/sum(trans_mat[row,:])
 # # replace cells in transition matrix by very small value where it is zero
 # trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
+
+
+#new try  
+# pd.DataFrame
+new_trans_mat= pd.DataFrame(trans_mat, columns=["G","C","*","+"], index=["G","C","*","+"])
+#print(new_trans_mat)
 # format the output string
 output_string = f"# The transition matrix can be found in the numpy file: {matname}_only.npy\n\
 # Number of states:\n\
 {rows}\n\
 # State labels: *=b, +=e\n\
-G C * + \n\
 # Transition matrix P:\n\
-{trans_mat}"
+{new_trans_mat}"
+#{trans_mat}
+
+
 
 # write to file
 with open(f"{matname}.txt", "w") as f: 
     f.write(output_string)
 print(output_string)
-np.save(f"{matname}_only", trans_mat)
+#np.save(f"{matname}_only", trans_mat)
