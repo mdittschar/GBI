@@ -1,0 +1,10 @@
+# The transition matrix can be found in the numpy file: notcds_p_matrix_only.npy
+# Number of states:
+4
+# State labels: *=b, +=e
+G C * + 
+# Transition matrix P:
+[[4.86868687e-01 5.03030303e-01 2.22044605e-16 1.01010101e-02]
+ [4.98989899e-01 4.90909091e-01 2.22044605e-16 1.01010101e-02]
+ [2.22044605e-16 1.00000000e+00 2.22044605e-16 2.22044605e-16]
+ [2.22044605e-16 2.22044605e-16 2.22044605e-16 1.00000000e+00]]

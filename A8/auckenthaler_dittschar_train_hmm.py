@@ -11,16 +11,12 @@ argv = sys.argv[1:]
 opts, _ = getopt.getopt(argv, "f:n:", ['file', 'name'])
 ses = [None] * 10
 
-ids = []
 i = 0
 for opt, arg in opts:
     if opt in ["-f", "--file1"]:
         # use Biopython parser for sequences
         for record in SeqIO.parse(arg, "fasta"):
             se = record.seq
-            
-            id = record.id
-            ids = np.append(ids, id)
             # get sequences
             ses[i] = str(se)
 
@@ -64,9 +60,11 @@ for s in ses:
 # divide by the total of each row
 for row in np.arange(rows):
     trans_mat[row,:] = trans_mat[row,:]/sum(trans_mat[row,:])
-
+# replace cells in transition matrix by very small value where it is zero
+trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
 # format the output string
-output_string = f"# Number of states:\n\
+output_string = f"# The transition matrix can be found in the numpy file: {matname}_only.npy\n\
+# Number of states:\n\
 {rows}\n\
 # State labels: *=b, +=e\n\
 G C * + \n\
@@ -76,3 +74,5 @@ G C * + \n\
 # write to file
 with open(f"{matname}.txt", "w") as f: 
     f.write(output_string)
+print(output_string)
+np.save(f"{matname}_only", trans_mat)
