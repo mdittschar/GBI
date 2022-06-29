@@ -1,11 +1,9 @@
 import numpy as np
 import sys
 import getopt
-import Bio
 from Bio import SeqIO
 import pandas as pd
 from io import StringIO
-import collections
 from collections import OrderedDict
 
 argv = sys.argv[1:]
@@ -71,7 +69,7 @@ for i, val in enumerate(input):
         # elif val == "C":
         #     p_plus = allmats[0, 2, 1]
         #     p_min = allmats[1, 2, 1]
-        log_odds = log_odds + np.log(p_plus/p_min)
+        # log_odds = log_odds + np.log(p_plus/p_min)
     elif i < len(input) - 1:
         c = states_dict[val]
         r = states_dict[input[i-1]]
