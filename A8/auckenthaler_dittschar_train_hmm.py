@@ -68,14 +68,15 @@ for row in np.arange(rows):
 #new try  
 # pd.DataFrame
 new_trans_mat= pd.DataFrame(trans_mat, columns=["G","C","*","+"], index=["G","C","*","+"])
+columns = "G C * +"
 #print(new_trans_mat)
 # format the output string
-output_string = f"# The transition matrix can be found in the numpy file: {matname}_only.npy\n\
-# Number of states:\n\
+output_string = f"# Number of states:\n\
 {rows}\n\
 # State labels: *=b, +=e\n\
+{columns}\n\
 # Transition matrix P:\n\
-{new_trans_mat}"
+{new_trans_mat.to_string(index=False, header=False)}"
 #{trans_mat}
 
 
