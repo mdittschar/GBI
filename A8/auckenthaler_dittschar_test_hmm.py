@@ -19,6 +19,7 @@ for opt, arg in opts:
             lines = f.readlines()
         # get the states
         states = lines[3]
+        # every second element in string is a state
         states = list(states)[::2]
         print("States:", states)
         # exclude the lines that are not transition matrix
@@ -27,7 +28,7 @@ for opt, arg in opts:
         # convert from a text matrix to a numpy array
         for i, line in enumerate(lines): 
             plusmat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(line[:-1]),header=None,  sep=" "))).astype(float)
-        #plusmat = np.load(arg)
+
     if opt in ["-b", "--matrix2"]:
         with open(arg) as f:
             lines = f.readlines()  
@@ -37,15 +38,19 @@ for opt, arg in opts:
         # convert from a text matrix to a numpy array
         for i, line in enumerate(lines): 
             minmat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(line[:-1]),header=None,  sep=" "))).astype(float)
-        #minmat = np.load(arg)
+
     # get sequence to compare to
     elif opt in ["-i", "--input"]:        
         for record in SeqIO.parse(arg, "fasta"):
                 se = record.seq
-                input = list(str(se))    
+                input = list(str(se))   
+
+# get states into an ordered dict
 states_dict = OrderedDict()
 for i, val in enumerate(states):   
     states_dict[val] = i
+
+# neutral values for addition/multiplication
 log_odds = 0
 p_plus = 1
 p_min = 1
