@@ -73,6 +73,6 @@ output_string = f"# Number of states:\n\
 {new_trans_mat.to_string(index=False, header=False)}"
 
 # write to file
-with open(f"{matname}.txt", "w") as f: 
+with open(f"auckenthaler_dittschart_{matname}.txt", "w") as f: 
     f.write(output_string)
 print(output_string)
