@@ -25,8 +25,6 @@ for opt, arg in opts:
     # get new transition matrix name
     elif opt in ["-n", "--name"]:
         matname = arg
-# # join all sequences together for probability computation
-# allses = np.array(list("".join(ses)))
 
 # define number of rows
 rows = 4
@@ -64,12 +62,8 @@ for row in np.arange(rows):
 # # replace cells in transition matrix by very small value where it is zero
 # trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
 
-
-#new try  
-# pd.DataFrame
 new_trans_mat= pd.DataFrame(trans_mat, columns=["G","C","*","+"], index=["G","C","*","+"])
 columns = "G C * +"
-#print(new_trans_mat)
 # format the output string
 output_string = f"# Number of states:\n\
 {rows}\n\
@@ -77,12 +71,8 @@ output_string = f"# Number of states:\n\
 {columns}\n\
 # Transition matrix P:\n\
 {new_trans_mat.to_string(index=False, header=False)}"
-#{trans_mat}
-
-
 
 # write to file
 with open(f"{matname}.txt", "w") as f: 
     f.write(output_string)
 print(output_string)
-#np.save(f"{matname}_only", trans_mat)

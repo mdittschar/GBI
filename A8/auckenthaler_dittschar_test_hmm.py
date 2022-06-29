@@ -59,66 +59,13 @@ for i, val in enumerate(input):
     if i == 0: 
         c = states_dict[val]
         r = states_dict["*"]
-        # p_plus = allmats[0, r,c]
-        # p_min = allmats[1, r,c]
-        # p_plus = p_p
-        # p_min = p_m
-        # if val == "G":
-        #     p_plus = allmats[0, 2, 0]
-        #     p_min = allmats[1, 2, 0]
-        # elif val == "C":
-        #     p_plus = allmats[0, 2, 1]
-        #     p_min = allmats[1, 2, 1]
-        # log_odds = log_odds + np.log(p_plus/p_min)
     elif i < len(input) - 1:
         c = states_dict[val]
         r = states_dict[input[i-1]]
-        # p_p = allmats[0, r,c]
-        # p_m = allmats[1, r,c]
-        # p_plus = p_plus * p_p
-        # p_min = p_min * p_m
-
-        # # if val == "G":
-        # #     if input[i - 1] == "G":
-        # #         p_p = allmats[0, 0, 0]
-        # #         p_m = allmats[1, 0, 0]
-        # #         p_plus = p_plus * p_p
-        # #         p_min = p_min * p_m
-        # #     elif input[i - 1] == "C":
-        # #         p_p = allmats[0, 1,0]
-        # #         p_m = allmats[1, 1, 0]
-        # #         p_plus = p_plus * p_p
-        # #         p_min = p_min * p_m
-        # #     log_odds = log_odds + np.log(p_p/p_m)
-        # # elif val == "C":
-        # #     if input[i - 1] == "G":
-        # #         p_p = allmats[0, 0, 1]
-        # #         p_m = allmats[1, 0, 1]
-        # #         p_plus = p_plus * p_p
-        # #         p_min = p_min * p_m
-        # #     elif input[i - 1] == "C":
-        # #         p_p = allmats[0, 1, 1]
-        # #         p_m = allmats[1, 1, 1]
-        # #         p_plus = p_plus * p_p
-        # #         p_min = p_min * p_m
-        # log_odds = log_odds + np.log(p_p/p_m)
-        
     else: 
         c = states_dict["+"]
         r = states_dict[val]
-        # p_p = allmats[0, r,c]
-        # p_m = allmats[1, r,c]
-        # p_plus = p_plus * p_p
-        # p_min = p_min * p_m
-
-        # # if val == "G":
-        # #     p_plus = p_plus * allmats[0, 0, 3]
-        # #     p_min = p_min * allmats[1, 0, 3]
-        # # elif val == "C":
-        # #     p_plus = p_plus * allmats[0, 1, 3]
-        # #     p_min = p_min * allmats[1, 1, 3]
-        # log_odds = log_odds + np.log(p_p/p_m)
-
+        
     p_p = allmats[0, r,c]
     p_m = allmats[1, r,c]
     p_plus = p_plus * p_p
