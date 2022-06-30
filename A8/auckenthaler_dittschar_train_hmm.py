@@ -33,12 +33,22 @@ trans_mat = np.zeros((rows, rows))
 for s in ses:
     # for every character in each sequence
     for i, n in enumerate(s):
-        # if it's the first character, append to "b" row
+        
         if i == 0:
+            # if it's the first character, append to "b" row
             if n == "G":
                 trans_mat[2,0] = trans_mat[2,0] + 1
             else: 
                 trans_mat[2,1] = trans_mat[2,1] + 1
+            # but also include transition from first to second character
+            if n == "G" and s[i+1] == "G":
+                trans_mat[0,0] = trans_mat[0,0] + 1
+            elif n == "C" and s[i+1] == "G":
+                trans_mat[1,0] = trans_mat[1,0] + 1
+            elif n == "C" and s[i+1] == "C":
+                trans_mat[1,1] = trans_mat[1,1] + 1
+            else:
+                trans_mat[0,1] = trans_mat[0,1] + 1
         # if it's not the end character, append to corresponding row and column
         elif len(s) - 1 > i:
             if n == "G" and s[i+1] == "G":
@@ -62,7 +72,7 @@ for row in np.arange(rows):
 # # replace cells in transition matrix by very small value where it is zero
 # trans_mat = np.where(trans_mat == 0, np.finfo(float).eps, trans_mat)
 
-new_trans_mat= pd.DataFrame(trans_mat, columns=["G","C","*","+"], index=["G","C","*","+"])
+new_trans_mat= pd.DataFrame(np.round(trans_mat, 4), columns=["G","C","*","+"], index=["G","C","*","+"])
 columns = "G C * +"
 # format the output string
 output_string = f"# Number of states:\n\
