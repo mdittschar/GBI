@@ -1,5 +1,9 @@
 import numpy as np
-
+import getopt
+import sys
+from io import StringIO
+import pandas as pd
+from Bio import SeqIO
 
 np.seterr(divide='ignore')
 
@@ -36,7 +40,48 @@ class HMMhandler():
         """Parses an HMM from the fixed format. See script P. 163.
         Relies on the file having the same order and structure from the shown structure.
         """
-        pass
+        argv = sys.argv[1:]
+        # get a tuple of the arguments to use
+        opts, _ = getopt.getopt(argv, "a:s:", ['hmm', 'sequence'])
+
+
+        for opt, arg in opts:
+            if opt in ["-a", "--hmm"]:
+                with open(arg) as f:
+                    lines = f.readlines()
+                # get the hidden states
+                states = lines[3]
+                # get the visible states
+                vis_states = lines[7]
+                vis_states = list(vis_states)[::2]
+                vis_states_no = len(vis_states)
+                # every second element in string is a state
+                states = list(states)[::2]
+                states_no = len(states)
+                # get the lines that have the emission matrix
+                emissions = lines[-states_no:-1]
+                print(emissions)
+                e_mat = np.zeros((states_no, vis_states_no))
+                # convert from a text matrix to a numpy array
+                for i, e in enumerate(emissions): 
+                    print("E: ",e)
+                    e_mat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(e[:-1]),header=None,  sep=" "))).astype(float)
+                
+                # get the lines that have the transition matrix
+                transitions = lines[-2*states_no -2 :-states_no-2]
+                t_mat = np.zeros((states_no , states_no))
+                # convert from a text matrix to a numpy array
+                for i, t in enumerate(transitions): 
+                    
+                    t_mat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(t[:-2]),header=None,  sep=" "))).astype(float)
+                
+        self.state_number = states_no
+        self.symbols_number = vis_states_no
+        self.state_names = states
+        self.symbol_names = vis_states
+        self.transm_matrix = t_mat
+        self.emission_matrix = e_mat         
+        
 
     def get_transition_probability(self, start_state, to_state):
         """Optinal function: Given states from the current HMM, returns the transition probability.
@@ -71,19 +116,26 @@ class HMMhandler():
         Returns:
             str: decoded sequence of states for the given sequence.
         """
+
         decoded_states = ""
         # TODO: implement the following functions.
         # You may need to adapt the input parameters for each function.
 
         # viterbi_init: initializaion of the Viterbi algorithm
+        v_mat = HMMhandler.viterbi_init(self, sequence)
+        print(v_mat)
         # viterbi_matrix_filling: fills up the matrices
         # viterbi_terminate: computes the final step of the recursion.
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
 
         return decoded_states
 
-    def viterbi_init(self):
-        pass
+    def viterbi_init(self, sequence):
+
+        
+        v_mat = np.zeros((self.state_number,len(sequence)))
+        v_mat[0, 0] = 1
+        return v_mat
 
     def viterbi_matrix_filling(self):
         pass
@@ -106,8 +158,20 @@ def prettyPrinting(input, decoded):
 
 
 def main():
+    argv = sys.argv[1:]
+    # get a tuple of the arguments to use
+    opts, _ = getopt.getopt(argv, "a:s:", ['hmm','sequence'])
+    sequences= [None]*4
+    i = 0
+    for opt, arg in opts:
+        if opt in ["-s", "--sequence"]:        
+            for record in SeqIO.parse(arg, "fasta"):
+                    se = record.seq
+                    sequences[i] = list(str(se))
+                    i = i + 1
     hmm_object = HMMhandler()
-    hmm_object.read_hmm("cpg.hmm")
+    hmm_object.read_hmm()#"cpg.hmm")
+    hmm_object.runViterbi(sequences[0])
     # TODO Parse fasta file for sequences
     # TODO For each sequence in the fasta file run the viterbi algorithm.
     # TODO Once decoded, print the original and the decoded sequences with the desired output format.
