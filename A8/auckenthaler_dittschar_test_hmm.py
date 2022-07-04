@@ -59,18 +59,23 @@ for i, val in enumerate(input):
     if i == 0: 
         c = states_dict[val]
         r = states_dict["*"]
-    elif i < len(input) - 1:
+    else:
         c = states_dict[val]
         r = states_dict[input[i-1]]
-    else: 
-        c = states_dict["+"]
-        r = states_dict[val]
         
     p_p = allmats[0, r,c]
     p_m = allmats[1, r,c]
     p_plus = p_plus * p_p
     p_min = p_min * p_m
     log_odds = log_odds + np.log(p_p/p_m)
+ 
+c = states_dict["+"]
+r = states_dict[val]
+p_p = allmats[0, r,c]
+p_m = allmats[1, r,c]
+p_plus = p_plus * p_p
+p_min = p_min * p_m
+log_odds = log_odds + np.log(p_p/p_m)
 
 print("The probability of the minus model is: ", p_min)
 print("The probability of the plus model is: ", p_plus)
