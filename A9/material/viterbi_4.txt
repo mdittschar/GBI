@@ -1,0 +1,13 @@
+ID of Sequence: Seq4
+Symbols: 
+Viterbi:
+
+1                                                         60
+GGGGAGCTCCTCCCCCGATAACAGCCCCAGGCCTGGGATCCAGCGAGCATGTGAGGGCTG
+ggggagctcctcccccgataacagccccaggcctgggatccagcgagcatgtgagggctg
+61                                                          120
+AGGCTCAGAAGAGCAGAGATGGAAAATGTGGAGAAAGGCCGAAGATCTTGCTGCAGCACT
+aggctcagaagagcagagatggaaAATGTGGAGAAAGGCCGAAGATCTTGCTGCAGCACT
+121                                                            131
+CTGACCAGATT
+CTGACCAGATTT0
