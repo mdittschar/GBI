@@ -124,7 +124,9 @@ class HMMhandler():
         # viterbi_init: initializaion of the Viterbi algorithm
         v_mat = HMMhandler.viterbi_init(self, sequence)
         # viterbi_matrix_filling: fills up the matrices
-        v_mat = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
+        v_mat, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
+        path = HMMhandler.viterbi_get_path(self, v_mat, states_dict)
+        prettyPrinting(sequence, path)
         # viterbi_terminate: computes the final step of the recursion.
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
 
@@ -132,7 +134,7 @@ class HMMhandler():
 
     def viterbi_init(self, sequence):        
         v_mat = np.zeros((self.state_number,len(sequence) + 2))
-        v_mat[0, 0] = log_data(1)
+        v_mat[:,0] = log_data(1)
         return v_mat
 
     def viterbi_matrix_filling(self, v_mat, sequence):
@@ -158,18 +160,21 @@ class HMMhandler():
 
             prev_l = l
             prev_h = h
-            # v_mat[:,i + 1] = self.emission_matrix[:, vis_states_dict[s]]
-
-        for line in v_mat.T[-10:]:
-            print(line)
-        #print("V_mat: ", v_mat)
-        pass
+        return v_mat, states_dict
 
     def viterbi_terminate(self):
         pass
 
-    def viterbi_get_path(self):
-        pass
+    def viterbi_get_path(self, v_mat, states_dict):
+        v_mat = v_mat
+        #print("V_mat:", v_mat)
+        states_arr = []
+        for c in np.arange(v_mat.shape[1]):
+            #print(np.argx(v_mat[:,c]))
+            # get key by value from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
+            states_arr = np.append(states_arr, list(states_dict.keys())[list(states_dict.values()).index(np.argmin(v_mat[:,-c]))])
+        path = "".join(states_arr[::-1])
+        return path
 
 
 def prettyPrinting(input, decoded):
@@ -179,6 +184,30 @@ def prettyPrinting(input, decoded):
         input (str): the original input sequences
         decoded (str): the sequence with the decoded states
     """
+    print("Symbols: ")
+    print("Viterbi: ")
+    #Code from our assignment 2
+    pair_no = 60
+    input = "".join(input)
+    seq_lens = len(input)
+    i = 0
+    while i*pair_no < seq_lens:
+        # assign strings to be visualised
+        # pair_no is number of pairs to visualise in one row
+        display_seq0 = input[i*pair_no:(i+1)*pair_no]
+        display_seq1 = decoded[i*pair_no:(i+1)*pair_no]
+        if i*pair_no < seq_lens - pair_no:
+            empty = (pair_no - len(str(seq_lens - pair_no*i)))* " "
+            # numbers at the ends of the lines to show number of pairs
+            alignment_nos = "".join([str(i*pair_no + 1), empty, str((i+1)*pair_no)])
+        else:
+            # visualisation if there's an incomplete line left
+            empty = " "*(pair_no)
+            alignment_nos = "".join([str(i*pair_no + 1), empty, str(seq_lens)])
+        # print the combined information
+        print(f"\n{alignment_nos}\n{display_seq0}\n{display_seq1}")
+        i = i+1
+    print()
     pass
 
 
@@ -196,7 +225,8 @@ def main():
                     i = i + 1
     hmm_object = HMMhandler()
     hmm_object.read_hmm()#"cpg.hmm")
-    hmm_object.runViterbi(sequences[0])
+    for sequence in sequences: 
+        hmm_object.runViterbi(sequence)
     # TODO Parse fasta file for sequences
     # TODO For each sequence in the fasta file run the viterbi algorithm.
     # TODO Once decoded, print the original and the decoded sequences with the desired output format.
