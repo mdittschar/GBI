@@ -4,12 +4,13 @@ import sys
 from io import StringIO
 import pandas as pd
 from Bio import SeqIO
+from collections import OrderedDict
 
 np.seterr(divide='ignore')
 
 
 def log_data(n):
-    """Optional function: Handles the case that a log recieves a 0. It returns minus infinity
+    """Optional function: Handles the case that a log receives a 0. It returns minus infinity
 
     Args:
         n (float)
@@ -59,20 +60,19 @@ class HMMhandler():
                 states = list(states)[::2]
                 states_no = len(states)
                 # get the lines that have the emission matrix
-                emissions = lines[-states_no:-1]
-                print(emissions)
+                emissions = lines[-states_no -1:-1]
+                
                 e_mat = np.zeros((states_no, vis_states_no))
                 # convert from a text matrix to a numpy array
                 for i, e in enumerate(emissions): 
-                    print("E: ",e)
+                    #print("E: ",e)
                     e_mat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(e[:-1]),header=None,  sep=" "))).astype(float)
-                
+                #print("E_mat: ", e_mat)
                 # get the lines that have the transition matrix
                 transitions = lines[-2*states_no -2 :-states_no-2]
                 t_mat = np.zeros((states_no , states_no))
                 # convert from a text matrix to a numpy array
-                for i, t in enumerate(transitions): 
-                    
+                for i, t in enumerate(transitions):                     
                     t_mat[i, :] = np.squeeze(np.array(pd.read_csv(StringIO(t[:-2]),header=None,  sep=" "))).astype(float)
                 
         self.state_number = states_no
@@ -123,21 +123,46 @@ class HMMhandler():
 
         # viterbi_init: initializaion of the Viterbi algorithm
         v_mat = HMMhandler.viterbi_init(self, sequence)
-        print(v_mat)
         # viterbi_matrix_filling: fills up the matrices
+        v_mat = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
         # viterbi_terminate: computes the final step of the recursion.
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
 
         return decoded_states
 
-    def viterbi_init(self, sequence):
-
-        
-        v_mat = np.zeros((self.state_number,len(sequence)))
-        v_mat[0, 0] = 1
+    def viterbi_init(self, sequence):        
+        v_mat = np.zeros((self.state_number,len(sequence) + 2))
+        v_mat[0, 0] = log_data(1)
         return v_mat
 
-    def viterbi_matrix_filling(self):
+    def viterbi_matrix_filling(self, v_mat, sequence):
+        # get states into an ordered dict
+        states_dict = OrderedDict()
+        vis_states_dict = OrderedDict()
+        for i, val in enumerate(self.state_names): 
+            states_dict[val] = i 
+        for i, val in enumerate(self.symbol_names):   
+            vis_states_dict[val] = i
+        for i, s in enumerate(sequence):
+            l = states_dict[s.lower()]
+            h = states_dict[s]
+            if i == 0:
+                v_mat[l, i + 1] = max(v_mat[0, i]+log_data(self.transm_matrix[0, l]),v_mat[0, i]+log_data(self.transm_matrix[h, l]))
+                v_mat[h, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, h]),v_mat[0, i]+log_data(self.transm_matrix[l, h]))
+            else:
+                v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, l]))
+                v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, h]))
+                if i == len(sequence) -1:
+                    v_mat[l, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
+                    v_mat[h, i + 2] = max(v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]),v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]))
+
+            prev_l = l
+            prev_h = h
+            # v_mat[:,i + 1] = self.emission_matrix[:, vis_states_dict[s]]
+
+        for line in v_mat.T[-10:]:
+            print(line)
+        #print("V_mat: ", v_mat)
         pass
 
     def viterbi_terminate(self):
