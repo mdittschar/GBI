@@ -93,6 +93,7 @@ class HMMhandler():
         Returns:
             float: probability of going from start_state to to_state
         """
+        # not implemented (because function is longer than referencing transmission matrix), please see runViterbi()
         pass
 
     def get_emission_probability(self, state, symbol):
@@ -105,19 +106,21 @@ class HMMhandler():
         Returns:
             float: probability of emitting symbol under state
         """
+        # not implemented (because emission matrix is always one and we can also reference the states in question)
+        # please see runViterbi()
         pass
 
-    def runViterbi(self, sequence, id, filename):
+    def runViterbi(self, sequence):
         """ For the given sequence of symbols, return the decoded sequence of symbols using the Viterbi algorithm.
 
         Args:
-            sequence (str): a string of symbols to decode using the Viterbi algorithm.
+            sequence (list): a list of symbols to decode using the Viterbi algorithm.
+            id: 
 
         Returns:
-            str: decoded sequence of states for the given sequence.
+            path (str): decoded sequence of states for the given sequence.
         """
 
-        decoded_states = ""
         # TODO: implement the following functions.
         # You may need to adapt the input parameters for each function.
 
@@ -128,17 +131,35 @@ class HMMhandler():
         v_mat, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
         path = HMMhandler.viterbi_get_path(self, v_mat, states_dict)
-        prettyPrinting(sequence, id, path, filename)
+    
 
-        return decoded_states
+        return path
 
-    def viterbi_init(self, sequence):        
-        v_mat = np.zeros((self.state_number,len(sequence) + 2))
+    def viterbi_init(self, sequence):   
+        """Generate the initial Viterbi Matrix
+
+        Args:
+            sequence (list): sequence to compute Viterbi matrix for
+
+        Returns:
+            vmat: (state_nos, sequence_chars + 2): Viterbi matrix with -inf for all entries except (0,0)
+        """
+        v_mat = np.zeros((self.state_number,len(sequence) + 2))        
+        v_mat[:,:] = log_data(0)
         v_mat[0,0] = log_data(1)
-        v_mat[1:,0] = log_data(0)
         return v_mat
 
     def viterbi_matrix_filling(self, v_mat, sequence):
+        """Fill the Viterbi matrix
+
+        Args:
+            vmat: (np.array) Shape: (state_nos, sequence_chars + 2): Viterbi matrix with -inf for all entries except (0,0)
+            sequence (list): sequence to compute Viterbi matrix for
+
+        Returns:
+            v_mat: (np.array) Shape: (state_nos, sequence_chars + 2): Filled Viterbi matrix
+            states_dict: dictionary: Dictionary with states as keys and index as values
+        """
         # get states into an ordered dict
         states_dict = OrderedDict()
         vis_states_dict = OrderedDict()
@@ -149,19 +170,18 @@ class HMMhandler():
         for i, s in enumerate(sequence):
             l = states_dict[s.lower()]
             h = states_dict[s]
-            # here, the other entries of v_mat are purposefully NOT made into logs (and -inf) because they are never accessed
+            # in the beginning, go from entry (0,0) to the respective states
             if i == 0:
                 v_mat[l, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, l]),v_mat[0, i]+log_data(self.transm_matrix[h, l]))
                 v_mat[h, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, h]),v_mat[0, i]+log_data(self.transm_matrix[l, h]))
-                # print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
+            # after that, insert computed probabilities to the current letter
             else:
                 v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, l]))
                 v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, h]))
-                # print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
-                # if i == len(sequence) - 1:
-                #     v_mat[l, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
-                #     v_mat[h, i + 2] = max(v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]),v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]))
-                #     print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
+                
+                # terminate (outside function)
+                if i == len(sequence) - 1:
+                    v_mat[0, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
 
             prev_l = l
             prev_h = h
@@ -171,14 +191,22 @@ class HMMhandler():
         pass
 
     def viterbi_get_path(self, v_mat, states_dict):
-        v_mat = v_mat
-        #print("V_mat:", v_mat)
+        """Get path string from Viterbi matrix
+
+        Args:
+            v_mat: (np.array) Shape: (state_nos, sequence_chars + 2): Filled Viterbi matrix
+            states_dict: dictionary: Dictionary with states as keys and index as values
+
+        Returns:
+            path (str): Traceback path string
+        """
         states_arr = []
-        for c in np.arange(v_mat.shape[1]):
-            #print(np.argx(v_mat[:,c]))
-            # get key by value from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
-            states_arr = np.append(states_arr, list(states_dict.keys())[list(states_dict.values()).index(np.argmin(v_mat[:,-c]))])
-        path = "".join(states_arr[::-1][:-2])
+        # for every column, get letter that corresponds to highest entry in column
+        for c in np.arange(1,v_mat.shape[1]):
+            # get key by value
+            # Adapted from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
+            states_arr = np.append(states_arr, list(states_dict.keys())[list(states_dict.values()).index(np.argmax(v_mat[:,-c]))])
+        path = "".join(states_arr[::-1])[:-1]
         return path
 
 
@@ -220,8 +248,13 @@ def prettyPrinting(input, id, decoded, filename):
     
     pass
 
+def get_seqs_and_ids():
+    """From a fasta file, get sequences and ids
 
-def main():
+    Returns:
+        sequences (list): sequences of fasta file
+        ids (np.array): ids of sequences
+    """
     argv = sys.argv[1:]
     # get a tuple of the arguments to use
     opts, _ = getopt.getopt(argv, "a:s:", ['hmm','sequence'])
@@ -236,11 +269,18 @@ def main():
                     sequences[i] = list(str(se))
                     ids = np.append(ids, id)
                     i = i + 1
+    return sequences, ids
+
+
+
+def main():
+    sequences, ids = get_seqs_and_ids()
     hmm_object = HMMhandler()
     hmm_object.read_hmm()#"cpg.hmm")
     i = 1
     for sequence, id in zip(sequences, ids): 
-        hmm_object.runViterbi(sequence, id, f"viterbi_{i}.txt")
+        path  = hmm_object.runViterbi(sequence)
+        prettyPrinting(sequence, id, path, f"viterbi_{id}.txt")
         i = i + 1
     # TODO Parse fasta file for sequences
     # TODO For each sequence in the fasta file run the viterbi algorithm.
