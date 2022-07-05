@@ -131,7 +131,7 @@ class HMMhandler():
         v_mat, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
         path = HMMhandler.viterbi_get_path(self, v_mat, states_dict)
-    
+        print("Last column of v mat: ", v_mat[:,-2])
 
         return path
 
@@ -211,7 +211,7 @@ class HMMhandler():
 
 
 def prettyPrinting(input, id, decoded, filename):
-    """ Formats the given sequences to match the desired output format.
+    """ Formats the given sequences to match the desired output format and saves it.
 
     Args:
         input (str): the original input sequences

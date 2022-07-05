@@ -1,0 +1,37 @@
+ID of Sequence: Seq3
+Symbols: 
+Viterbi:
+
+1                                                         60
+CGGAGGTTGCGCTGCAGACTCGCGCCCCGAGGCAGTTAGCCCCCTGGGTTCGCAGTCCCT
+CGGAGGTTGCGCTGCAGACTCGCGCCCCGAGGCAGTTAGCCCCCTGGGTTCGCAGTCCCT
+61                                                         120
+CACGGCCCGGGGGCGTGCTACGGAGGAACCCCAAGAGGGGAGTGCTCATGCAAGCCGGGA
+CACGGCCCGGGGGCGTGCTACGGAGGAACCCCAAGAGGGGAGTGCTCATGCAAGCCGGGA
+121                                                         180
+TCCGGCCGCCGTCTCTGATTGTCTCCCCTAGCAGTTTCACAATACCGGAGTTTGCTTTAA
+TCCGGCCGCCGTCTCTGATTGTCTCCCCTAGCAGTTtCacaataccggagtttgctttaa
+181                                                         240
+GAGTTTTTGAACATTCCAGAATACGAAGTTCTCCGTGTTTTCATTTGGAGATCACCGAGG
+gagtttttgaacattccagaatacgaagttctccgtgttttcatttggagatcaccgagg
+241                                                         300
+AGTTTATGAAGCGTCTCATTCGTTGGGGGCGGCTGACAGCGACAGCATTGTGGGAAGAGG
+agtttatgaagcgtctcattcgttgggggcggctgacagcgacagcattgtgggaagagg
+301                                                         360
+CAGTGTGAGGTGTGAGGCCATTTAGCCCTCTTTCTTATATACCATTCTGAAGCCTGGTGC
+cagtgtgaggtgtgaggccatttagccctctttcttatataccattctgaagcctggtgc
+361                                                         420
+AATCTATGCGGTGATGAAACACACAGGCCCAGGCTAGGTTTCACGTCCTACTGTAACAGA
+aatctatgcggtgatgaaacacacaggcccaggctaggtttcacgtcctactgtaacaga
+421                                                         480
+CAGCCGATAGCCAAGATTTCAGGCCTAGGGCCTAGAAGGCGTGGCGTCTATTCACAAATT
+cagccgatagccaagatttcaggcctagggcctagaaggcgtggcgtctattcacaaatt
+481                                                         540
+TATGTGTTCAAAACCACTTGCTGGCAAAAAAGCAGAATTTATGCTCACATAGCCAGGGGG
+tatgtgttcaaaaccacttgctggcaaaaaagcagaatttatgctcacatagccaggggg
+541                                                          600
+CAGGCAACAGTGTCTTCTAAACGCCCTTGAAGATTTTGTTATCCCGAAGAGTGTCGTGGT
+caggcaacagtgtcttctaaacgcccttgaagattttgttatcccgaagagtgtcgtggt
+601                                                            617
+TACCCCTGGAAGAAACC
+tacccctggaagaaacc

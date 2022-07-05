@@ -1,0 +1,103 @@
+ID of Sequence: Seq1
+Symbols: 
+Viterbi:
+
+1                                                        60
+GAGAGCACCTCAGCTGCCTGAAAGGCATGCCATGAGTCAGCTCAGGAAATGGCAAAAAGG
+GaGaGCaCCtCagCtGCCTGaaaggcatgccatgagtcagctcaggaaatggcaaaaagg
+61                                                        120
+CGATCAAAGGTCCTACCCCACCCTTAATGTCATACAACCAAGTCTTCCATTGCATTCTGA
+cgatcaaaggtcctaccccacccttaatgtcatacaaccaagtcttccattgcattctga
+121                                                        180
+CGTGCCAAAAGAACCTGCTCTTCTGGGTAGGACTTGGTGGGGCATTAGGAGGAAGCCTTG
+cgtgccaaaagaacctgctcttctgggtaggacttggtggggcattaggaggaagccttg
+181                                                        240
+GCCACAGCTTAATGTTCTACCATTTGGGCTGAGGGCCATTAAAGTCTCTCTGGGCCTGCC
+gccacagcttaatgttctaccatttgggctgagggccattaaagtctctctgggcctgcc
+241                                                        300
+GCCTTGCCCACGGAGATGGCACACGGGTTTCCCTCTCGACAGGGGCAGGGAGGGAAAGTG
+gccttgcccacggagatggcacacgggtttccctctcgacaggggcagggagggaaagtg
+301                                                        360
+TTGGCCGCCGCGCTCGCCGCCGAGGTGGAGCTGGCCGGGCTCCCGTGGGGGGAGGGGAGC
+ttggccgccGCGCTCGCCGCCGAGGTGGAGCTGGCCGGGCTCCCGTGGGGGGAGGGGAGC
+361                                                        420
+TCCTCGGAAGCACACGGCCTGACGCAGCCCCTCCAGCGCTGCAAGGCACTCCCCTGTACG
+TCCTCGGAAGCACACGGCCTGACGCAGCCCCTCCAGCGCTGCAAGGCACTCCCCTGTACG
+421                                                        480
+GCAGCCAGCGACGGCGTAGCCCTCCTGTTCTTTCCTATTCTCTGAGTCTTACCTATCCGG
+GCAGCCAGCGACGGCGTAGCCCTCCTGTTCTTTCCTAttctctgagtcttacctatccgg
+481                                                        540
+TCTGCGGCCAGAGTACATTCCCTAGACTAATTTTAGGATGTCGCCAGATGTCAGTTACAA
+tctgcggccagagtacattccctagactaattttaggatgtcgccagatgtcagttacaa
+541                                                        600
+CCCTGTTTCACAAAGATGCCCACTCTAGCATGCCCTAACTAAAAGAGTTGGGAAGGTGGA
+ccctgtttcacaaagatgcccactctagcatgccctaactaaaagagttgggaaggtgga
+601                                                        660
+ATCAGGGAGAACAATACTCAACTATCGAAGCCTCCCTGGGAGTAAGCCTCTGACCACGTG
+atcagggagaacaatactcaactatcgaagcctccctgggagtaagcctctgaccacgtg
+661                                                        720
+GGTTGGGCTGGCTCTTAGTACCAGTCAGGTCACAGACACACTAGATTAGCCCATGTAGGG
+ggttgggctggctcttagtaccagtcaggtcacagacacactagattagcccatgtaggg
+721                                                        780
+GGGTCTCCTCTGAGTGAGTGGAGCTGCATGGGTGCAGCTCCAGGGAAGGCCTTGCAAGAT
+gggtctcctctgagtgagtggagctgcatgggtgcagctccagggaaggccttgcaagat
+781                                                        840
+AAAAGCCCTGCTATGGGATGTCCGTGTCAAGCGGAGCAACTTGGCACAAAAGATGAAAGC
+aaaagccctgctatgggatgtccgtgtcaagcggagcaacttggcacaaaagatgaaagc
+841                                                        900
+CCTGCTTTCGCAGGGGGGAGGAGTGCGCTCTTCAAGGCGGGTTTGATGTTATGGCAAAAA
+cctgctttcgcaggggggaggagtgcgctcttcaaggcgggtttgatgttatggcaaaaa
+901                                                        960
+GGGATTACACACAAACCGAACCTTGTGGCTCAACTAACTTAGCCCAATCCCTCACCTGCT
+gggattacacacaaaccgaaccttgtggctcaactaacttagcccaatccctcacctgct
+961                                                        1020
+TGTTGGCTATGAAAGGCCCCCAAACTGTTACCCACTGGATGGCTGGGATTTTTTTAGGCA
+tgttggctatgaaaggcccccaaactgttacccactggatggctgggatttttttaggca
+1021                                                         1080
+CAAGCCATGCCCAAGCACGCCTGCAAGGCTGGACATACATGCTCTTTCGATGGTTGTAGG
+caagccatgcccaagcacgcctgcaaggctggacatacatgctctttcgatggttgtagg
+1081                                                         1140
+CCGTTTAAGGCAGGGGGTTCTTGTCAACACTTCTAGGACTTACCCTTGCTTGCTCATTCA
+ccgtttaaggcagggggttcttgtcaacacttctaggacttacccttgcttgctcattca
+1141                                                         1200
+CAGCCCGCAGCCATGTTGAGCCAGAGCGCGCTGTGGCCTGACCCACTGGCTTTCTTGGGG
+cagcccgcagccatgttgagccagagcgcgctgtggcctgacccactggctttcttgggg
+1201                                                         1260
+GGGAGAGGAAGTGAAGGCTGATCGAGCTGGAATGTTATTGTTAGAGCCCCTATAGGAATC
+gggagaggaagtgaaggctgatcgagctggaatgttattgttagagcccctataggaatc
+1261                                                         1320
+AGAAAAAGGTTCAAGCTACACTCTTTCTGCTGACTAACAGGGTATTTTGGCGCATGCTTC
+agaaaaaggttcaagctacactctttctgctgactaacagggtattttggcgcatgcttc
+1321                                                         1380
+TAGGCCCAGTTAAGCGAAGTAGGTTCCAGCCGCCAGTTAGTCGCAAGTTACAAATCTGGC
+taggcccagttaagcgaagtaggttccagccgccagttagtcgcaagttacaaatctggc
+1381                                                         1440
+CAAAATGGTCAACACTCCAGAACAAACTTCCACGGCTAGCAGGTACTTACCAAAAGGCAG
+caaaatggtcaacactccagaacaaacttccacggctagcaggtacttaccaaaaggcag
+1441                                                         1500
+AAATCTTAACCAGTAGACACACCCTTGTTTTCCAACTCAGAGGGAATGTATGGACGTCTT
+aaatcttaaccagtagacacacccttgttttccaactcagagggaatgtatggacgtctt
+1501                                                         1560
+TTTCCAGAAAGCACAATAGGGTAGTGTTGACGTAAAACTGCTGTCTGTGCCGTGCCAATG
+tttccagaaagcacaatagggtagtgttgacgtaaaactgctgtctgtgccgtgccaatg
+1561                                                         1620
+CGAGGGCCTGGTTCAAAGACTTGAGAATGTCCTCTCTCAAAAGGCTTTTGTCTTTGGATA
+cgagggcctggttcaaagacttgagaatgtcctctctcaaaaggcttttgtctttggata
+1621                                                         1680
+AGTGGGGGCTTGGCATCGTTCTACTTGGCAGTAAGTAACTCGGCAGAGATCCTGAGGTGA
+agtgggggcttggcatcgttctacttggcagtaagtaactcggcagagatcctgaggtga
+1681                                                         1740
+GGGCTGGTTCTTAGTGCTTGTTAGGGATTTTGTCCAGAATTACCGTGCTGCCGCTACTTT
+gggctggttcttagtgcttgttagggattttgtccagaattaccgtgctgccgctacttt
+1741                                                         1800
+CTATTTGTCACACACCCAGAAGTTGTCTCGCAGGTGGCACCCAGTGTGGGGGTACTTCAA
+ctatttgtcacacacccagaagttgtctcgcaggtggcacccagtgtgggggtacttcaa
+1801                                                         1860
+ATCGGACTAATTCTGGCACGTCCAAAAAAAAGCTGCAGTGAGCATTAAGTTCCATCTGCT
+atcggactaattctggcacgtccaaaaaaaagctgcagtgagcattaagttccatctgct
+1861                                                         1920
+CTCATCTTGCATGATACGTGGAGAGGGGCTCTCAAAATTAGGGTGCTCCGGCAGATCATG
+ctcatcttgcatgatacgtggagaggggctctcaaaattagggtgctccggcagatcatg
+1921                                                            1966
+TTCAGGCTTTTGTAATTATGGCTCCATTTCCATAGGCTCTACTGGG
+ttcaggcttttgtaattatggctccatttccataggctctactggg
