@@ -16,4 +16,4 @@ CCCTGGTTGGCGCCCCCACCGGACAGGTTAAGTCGGCATTGACCCCATTGGTTGTAGTGG
 ccctggttggcgcccccaccggacaggttaagtcggcattgaccccattggtTgTAGTGG
 241                                                            256
 AAGTCACCCCTCAGGA
-AAGTCACCCCTCAGGAA0
+AAGTCACCCCTCAGGA

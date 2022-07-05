@@ -123,18 +123,19 @@ class HMMhandler():
 
         # viterbi_init: initializaion of the Viterbi algorithm
         v_mat = HMMhandler.viterbi_init(self, sequence)
-        # viterbi_matrix_filling: fills up the matrices
+        # viterbi_matrix_filling: fills up the matrices            
+        # viterbi_terminate: computes the final step of the recursion.
         v_mat, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
+        # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
         path = HMMhandler.viterbi_get_path(self, v_mat, states_dict)
         prettyPrinting(sequence, id, path, filename)
-        # viterbi_terminate: computes the final step of the recursion.
-        # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
 
         return decoded_states
 
     def viterbi_init(self, sequence):        
         v_mat = np.zeros((self.state_number,len(sequence) + 2))
-        v_mat[:,0] = log_data(1)
+        v_mat[0,0] = log_data(1)
+        v_mat[1:,0] = log_data(0)
         return v_mat
 
     def viterbi_matrix_filling(self, v_mat, sequence):
@@ -148,15 +149,19 @@ class HMMhandler():
         for i, s in enumerate(sequence):
             l = states_dict[s.lower()]
             h = states_dict[s]
+            # here, the other entries of v_mat are purposefully NOT made into logs (and -inf) because they are never accessed
             if i == 0:
-                v_mat[l, i + 1] = max(v_mat[0, i]+log_data(self.transm_matrix[0, l]),v_mat[0, i]+log_data(self.transm_matrix[h, l]))
+                v_mat[l, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, l]),v_mat[0, i]+log_data(self.transm_matrix[h, l]))
                 v_mat[h, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, h]),v_mat[0, i]+log_data(self.transm_matrix[l, h]))
+                # print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
             else:
                 v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, l]))
                 v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, h]))
-                if i == len(sequence) -1:
-                    v_mat[l, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
-                    v_mat[h, i + 2] = max(v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]),v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]))
+                # print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
+                # if i == len(sequence) - 1:
+                #     v_mat[l, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
+                #     v_mat[h, i + 2] = max(v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]),v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]))
+                #     print(f"{i+1}th letter. Sequence has {len(sequence)} letters")
 
             prev_l = l
             prev_h = h
@@ -173,7 +178,7 @@ class HMMhandler():
             #print(np.argx(v_mat[:,c]))
             # get key by value from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
             states_arr = np.append(states_arr, list(states_dict.keys())[list(states_dict.values()).index(np.argmin(v_mat[:,-c]))])
-        path = "".join(states_arr[::-1])
+        path = "".join(states_arr[::-1][:-2])
         return path
 
 
