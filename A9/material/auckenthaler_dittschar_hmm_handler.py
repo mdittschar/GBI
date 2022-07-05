@@ -280,7 +280,7 @@ def main():
     i = 1
     for sequence, id in zip(sequences, ids): 
         path  = hmm_object.runViterbi(sequence)
-        prettyPrinting(sequence, id, path, f"viterbi_{id}.txt")
+        prettyPrinting(sequence, id, path, f"auckenthaler_dittschar_viterbi_{id}.txt")
         i = i + 1
     # TODO Parse fasta file for sequences
     # TODO For each sequence in the fasta file run the viterbi algorithm.
