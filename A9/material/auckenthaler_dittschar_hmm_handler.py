@@ -93,7 +93,7 @@ class HMMhandler():
         Returns:
             float: probability of going from start_state to to_state
         """
-        # not implemented (because function is longer than referencing transmission matrix), please see runViterbi()
+        # implemented in runViterbi()
         pass
 
     def get_emission_probability(self, state, symbol):
@@ -106,8 +106,7 @@ class HMMhandler():
         Returns:
             float: probability of emitting symbol under state
         """
-        # not implemented (because emission matrix is always one and we can also reference the states in question)
-        # please see runViterbi()
+        # implemented in runViterbi()
         pass
 
     def runViterbi(self, sequence):
@@ -176,8 +175,8 @@ class HMMhandler():
                 v_mat[h, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, h]),v_mat[0, i]+log_data(self.transm_matrix[l, h]))
             # after that, insert computed probabilities to the current letter
             else:
-                v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, l]))
-                v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.transm_matrix[prev_l, h]))
+                v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_h, l]))
+                v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.emission_matrix[h,h-1]*self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, h]))
                 
                 # terminate (outside function)
                 if i == len(sequence) - 1:
