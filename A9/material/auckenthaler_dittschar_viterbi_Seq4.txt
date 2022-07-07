@@ -4,10 +4,10 @@ Viterbi:
 
 1                                                         60
 GGGGAGCTCCTCCCCCGATAACAGCCCCAGGCCTGGGATCCAGCGAGCATGTGAGGGCTG
-GGGGAGCTCCTCCCCCGATAACAGCCCCAGGCCTGGGATCCAGCGAGCATGTGAGGGCTG
+ggggagctcctcccccgataacagccccaggcctgggatccagcgagcatgtgagggctg
 61                                                          120
 AGGCTCAGAAGAGCAGAGATGGAAAATGTGGAGAAAGGCCGAAGATCTTGCTGCAGCACT
-AGGCTCAGAAGAGCAGAGATGGAAaatgtggagaaaggccgaagatcttgctgcagcact
+aggctcagaagagcagagatggaaaatgtggagaaaggccgaagatcttgctgcagcact
 121                                                            131
 CTGACCAGATT
 ctgaccagatt

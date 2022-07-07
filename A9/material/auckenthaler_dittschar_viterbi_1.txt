@@ -1,0 +1,7 @@
+ID of Sequence: 1
+Symbols: 
+Viterbi:
+
+1                                                            4
+CGCG
+GGCG

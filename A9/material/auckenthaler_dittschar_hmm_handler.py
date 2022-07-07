@@ -93,7 +93,7 @@ class HMMhandler():
         Returns:
             float: probability of going from start_state to to_state
         """
-        # implemented in runViterbi()
+        # implemented in viterbi_matrix_filling()
         pass
 
     def get_emission_probability(self, state, symbol):
@@ -106,7 +106,7 @@ class HMMhandler():
         Returns:
             float: probability of emitting symbol under state
         """
-        # implemented in runViterbi()
+        # implemented in viterbi_matrix_filling()
         pass
 
     def runViterbi(self, sequence):
@@ -127,10 +127,9 @@ class HMMhandler():
         v_mat = HMMhandler.viterbi_init(self, sequence)
         # viterbi_matrix_filling: fills up the matrices            
         # viterbi_terminate: computes the final step of the recursion.
-        v_mat, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
+        v_mat, ptr, states_dict = HMMhandler.viterbi_matrix_filling(self, v_mat,  sequence)
         # viterbi_traceback: returns the decoded sequence of states for the given sequence of symbols
-        path = HMMhandler.viterbi_get_path(self, v_mat, states_dict)
-        print("Last column of v mat: ", v_mat[:,-2])
+        path = HMMhandler.viterbi_get_path(self, v_mat, ptr, states_dict)
 
         return path
 
@@ -158,6 +157,9 @@ class HMMhandler():
         Returns:
             v_mat: (np.array) Shape: (state_nos, sequence_chars + 2): Filled Viterbi matrix
             states_dict: dictionary: Dictionary with states as keys and index as values
+            ptr: (np.array) shape: (state_nos, sequence_chars + 2): Traceback matrix with 1 if the previous state was positive,
+            0 if it was negative
+            states_dict: dict : Dictionary with states and corresponding indices
         """
         # get states into an ordered dict
         states_dict = OrderedDict()
@@ -166,6 +168,7 @@ class HMMhandler():
             states_dict[val] = i 
         for i, val in enumerate(self.symbol_names):   
             vis_states_dict[val] = i
+        ptr = np.full_like(a=v_mat, fill_value=-np.inf)
         for i, s in enumerate(sequence):
             l = states_dict[s.lower()]
             h = states_dict[s]
@@ -173,23 +176,37 @@ class HMMhandler():
             if i == 0:
                 v_mat[l, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, l]),v_mat[0, i]+log_data(self.transm_matrix[h, l]))
                 v_mat[h, i + 1] = max(v_mat[0, i]+ log_data(self.transm_matrix[0, h]),v_mat[0, i]+log_data(self.transm_matrix[l, h]))
+                # update pointer
+                ptr[l, i+1] = 0
             # after that, insert computed probabilities to the current letter
             else:
-                v_mat[l, i + 1] = max(v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, l]),v_mat[prev_h, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_h, l]))
-                v_mat[h, i + 1] = max(v_mat[prev_h, i]+ log_data(self.emission_matrix[h,h-1]*self.transm_matrix[prev_h, h]),v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, h]))
+                l_to_l = v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, l])
+                h_to_l = v_mat[prev_h, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_h, l])
+                h_to_h = v_mat[prev_h, i]+ log_data(self.emission_matrix[h,h-1]*self.transm_matrix[prev_h, h])
+                l_to_h = v_mat[prev_l, i]+ log_data(self.emission_matrix[l,h-1]*self.transm_matrix[prev_l, h])
+                
+                v_mat[l, i + 1] = max(l_to_l, h_to_l)
+                v_mat[h, i + 1] = max(h_to_h, l_to_h)
+                # also update pointer on the right positions
+                ptr[l, i + 1] = np.argmax([l_to_l, h_to_l])
+                ptr[h, i + 1] = np.argmax([l_to_h, h_to_h])
                 
                 # terminate (outside function)
                 if i == len(sequence) - 1:
-                    v_mat[0, i + 2] = max(v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0]),v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0]))
+                    l_to_0 = v_mat[l, i+1]+ log_data(self.transm_matrix[l, 0])
+                    h_to_0= v_mat[h, i+1]+ log_data(self.transm_matrix[h, 0])
+                    v_mat[0, i + 2] = max(l_to_0,h_to_0)
+                    # update pointer
+                    ptr[0, i + 2] = np.argmax([l_to_0, h_to_0])
 
             prev_l = l
             prev_h = h
-        return v_mat, states_dict
+        return v_mat, ptr,  states_dict
 
     def viterbi_terminate(self):
         pass
 
-    def viterbi_get_path(self, v_mat, states_dict):
+    def viterbi_get_path(self, v_mat, ptr, states_dict):
         """Get path string from Viterbi matrix
 
         Args:
@@ -200,12 +217,20 @@ class HMMhandler():
             path (str): Traceback path string
         """
         states_arr = []
-        # for every column, get letter that corresponds to highest entry in column
+        # for every column, get letter that corresponds to highest entry in upper or lower half of column (dependent on pointer)
+        idx = 0
         for c in np.arange(1,v_mat.shape[1]):
-            # get key by value
-            # Adapted from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
-            states_arr = np.append(states_arr, list(states_dict.keys())[list(states_dict.values()).index(np.argmax(v_mat[:,-c]))])
-        path = "".join(states_arr[::-1])[:-1]
+            if ptr[idx,-c] == 1:
+                # get key by value
+                # Adapted from: https://stackoverflow.com/questions/8023306/get-key-by-value-in-dictionary
+                val = list(states_dict.keys())[list(states_dict.values()).index(np.argmax(v_mat[:5,-c-1]))]               
+                idx = np.argmax(ptr[:5,-c-1]).astype(int)
+            elif ptr[idx, -c] == 0:
+                val = list(states_dict.keys())[list(states_dict.values()).index(5 + np.argmax(v_mat[5:,-c-1]))]
+                idx = 5 + np.argmax(ptr[5:,-c-1]).astype(int)
+
+            states_arr = np.append(states_arr, val)
+        path = "".join(states_arr[::-1])[1:]
         return path
 
 
@@ -274,6 +299,8 @@ def get_seqs_and_ids():
 
 def main():
     sequences, ids = get_seqs_and_ids()
+    # sequences = [list("CGCG")]
+    # ids = "1"
     hmm_object = HMMhandler()
     hmm_object.read_hmm()#"cpg.hmm")
     i = 1

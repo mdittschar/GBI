@@ -4,7 +4,7 @@ Viterbi:
 
 1                                                        60
 GAGAGCACCTCAGCTGCCTGAAAGGCATGCCATGAGTCAGCTCAGGAAATGGCAAAAAGG
-GaGaGCaCCtCagCtGCCTGaaaggcatgccatgagtcagctcaggaaatggcaaaaagg
+gagagcacctcagctgcctgaaaggcatgccatgagtcagctcaggaaatggcaaaaagg
 61                                                        120
 CGATCAAAGGTCCTACCCCACCCTTAATGTCATACAACCAAGTCTTCCATTGCATTCTGA
 cgatcaaaggtcctaccccacccttaatgtcatacaaccaagtcttccattgcattctga
@@ -13,19 +13,19 @@ CGTGCCAAAAGAACCTGCTCTTCTGGGTAGGACTTGGTGGGGCATTAGGAGGAAGCCTTG
 cgtgccaaaagaacctgctcttctgggtaggacttggtggggcattaggaggaagccttg
 181                                                        240
 GCCACAGCTTAATGTTCTACCATTTGGGCTGAGGGCCATTAAAGTCTCTCTGGGCCTGCC
-gccacagcttaatgttctaccatttgggctgagggccattaaagtctctctgggcctgcc
+gccacagcttaatgttctaccatttgggctgagggccattaaagtctctcTGGGCCTGCC
 241                                                        300
 GCCTTGCCCACGGAGATGGCACACGGGTTTCCCTCTCGACAGGGGCAGGGAGGGAAAGTG
-gccttgcccacggagatggcacacgggtttccctctcgacaggggcagggagggaaagtg
+GCCTTGCCCACGGAGATGGCACACGGGTTTCCCTCTCGACAGGGGCAGGGAGGGAAAGTG
 301                                                        360
 TTGGCCGCCGCGCTCGCCGCCGAGGTGGAGCTGGCCGGGCTCCCGTGGGGGGAGGGGAGC
-ttggccgccGCGCTCGCCGCCGAGGTGGAGCTGGCCGGGCTCCCGTGGGGGGAGGGGAGC
+TTGGCCGCCGCGCTCGCCGCCGAGGTGGAGCTGGCCGGGCTCCCGTGGGGGGAGGGGAGC
 361                                                        420
 TCCTCGGAAGCACACGGCCTGACGCAGCCCCTCCAGCGCTGCAAGGCACTCCCCTGTACG
 TCCTCGGAAGCACACGGCCTGACGCAGCCCCTCCAGCGCTGCAAGGCACTCCCCTGTACG
 421                                                        480
 GCAGCCAGCGACGGCGTAGCCCTCCTGTTCTTTCCTATTCTCTGAGTCTTACCTATCCGG
-GCAGCCAGCGACGGCGTAGCCCTCCTGTTCTTTCCTAttctctgagtcttacctatccgg
+GCAGCCAGCGACGGCgtagccctcctgttctttcctattctctgagtcttacctatccgg
 481                                                        540
 TCTGCGGCCAGAGTACATTCCCTAGACTAATTTTAGGATGTCGCCAGATGTCAGTTACAA
 tctgcggccagagtacattccctagactaattttaggatgtcgccagatgtcagttacaa
