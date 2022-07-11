@@ -32,8 +32,10 @@ class gffParser:
         self.data = {}
         self.dict = {}
         for line in input_file:
+            # workaround from forum
             record = line.strip().split("\t")
             sequence_name = record[0]
+            print("Sequence name: ", sequence_name)
             source = record[1]
             feature = record[2]
             start = int(record[3])
@@ -52,11 +54,11 @@ class gffParser:
                 frame = None
             attributes = record[8].split(';')
             attributes = {x.split('=')[0]: x.split('=')[1]
-                          for x in attributes if '=' in x}
+                        for x in attributes if '=' in x}
             if not(sequence_name in self.data):
                 self.data[sequence_name] = []
             alpha = {'source': source, 'feature': feature, 'start': start,
-                     'end': end, 'score': score, 'strand': strand, 'frame': frame}
+                    'end': end, 'score': score, 'strand': strand, 'frame': frame}
             for k, v in attributes.iteritems():
                 alpha[k] = v
             self.data[sequence_name].append(alpha)
