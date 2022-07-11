@@ -32,7 +32,6 @@ class gffParser:
         self.data = {}
         self.dict = {}
         for line in input_file:
-            # workaround from forum
             record = line.strip().split("\t")
             sequence_name = record[0]
             print("Sequence name: ", sequence_name)
