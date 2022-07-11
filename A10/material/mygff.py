@@ -2,6 +2,7 @@ import getopt
 import pandas as pd
 import sys
 from io import StringIO
+import numpy as np
 
 class myGffParser():
     def __init__(self, lines):
@@ -19,5 +20,15 @@ class myGffParser():
                 df.loc[i, "score"] = record[5]
                 df.loc[i, "strand"] = record[6]
                 df.loc[i, "phase"] = record[7][0]
-                df.loc[i, "attributes"] = record[7][1:]
+                splitstring= record[7][1:].split("=")
+                keys = []
+                items = []
+                for s in splitstring:
+                    keys = np.append(keys, s.split(" ")[-1])
+                    items = np.append(items, s.split(" ")[:-1])
+                items = items[1:]
+                attributes = dict(zip(keys, items))
+                df.loc[i, "attributes"] = [attributes]
         self.df = df
+
+        
