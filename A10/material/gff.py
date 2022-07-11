@@ -32,35 +32,36 @@ class gffParser:
         self.data = {}
         self.dict = {}
         for line in input_file:
-            record = line.strip().split("\t")
-            sequence_name = record[0]
-            print("Sequence name: ", sequence_name)
-            source = record[1]
-            feature = record[2]
-            start = int(record[3])
-            end = int(record[4])
-            if (record[5] != '.'):
-                score = record[5]
-            else:
-                score = None
-            if (record[6] == '+'):
-                strand = 1
-            else:
-                strand = -1
-            if (record[7] != '.'):
-                frame = record[7]
-            else:
-                frame = None
-            attributes = record[8].split(';')
-            attributes = {x.split('=')[0]: x.split('=')[1]
-                        for x in attributes if '=' in x}
-            if not(sequence_name in self.data):
-                self.data[sequence_name] = []
-            alpha = {'source': source, 'feature': feature, 'start': start,
-                    'end': end, 'score': score, 'strand': strand, 'frame': frame}
-            for k, v in attributes.iteritems():
-                alpha[k] = v
-            self.data[sequence_name].append(alpha)
+            if line[0] != "#" and len(line.strip().split("\t")) == 8:
+                record = line.strip().split("\t")
+                sequence_name = record[0]
+                source = record[1]
+                feature = record[2]
+                start = int(record[3])
+                end = int(record[4])
+                if (record[5] != '.'):
+                    score = record[5]
+                else:
+                    score = None
+                if (record[6] == '+'):
+                    strand = 1
+                else:
+                    strand = -1
+                if (record[7] != '.'):
+                    frame = record[7]
+                else:
+                    frame = None
+                attributes = record[7].split(';')
+                attributes = {x.split('=')[0]: x.split('=')[1]
+                            for x in attributes if '=' in x}
+                if not(sequence_name in self.data):
+                    self.data[sequence_name] = []
+                alpha = {'source': source, 'feature': feature, 'start': start,
+                        'end': end, 'score': score, 'strand': strand, 'frame': frame}
+                # changed because iteritems() does not work in our python version
+                for k, v in attributes.items():
+                    alpha[k] = v
+                self.data[sequence_name].append(alpha)
 
     def geneDict(self):
         """ Creates a dictionary of all the genes in the file.
