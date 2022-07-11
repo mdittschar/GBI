@@ -48,16 +48,16 @@ for i in out.df.index:
 print("Pred_arr: ", ref_arr)
 
 
-tp_1 = np.mean(np.logical_and(pred_arr1 == 1, ref_arr == 1))
+tp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 1))/np.sum(ref_arr)
 print("True positive rate of prokka: ", tp_1)
 
-tn_1 = np.mean(np.logical_and(pred_arr1 == 0, ref_arr == 0))
+tn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
 print("True negative rate of prokka: ", tn_1)
 
-fp_1 = np.mean(np.logical_and(pred_arr1 == 1, ref_arr == 0))
+fp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
 print("False positive rate of prokka: ", fp_1)#
 
-fn_1 = np.mean(np.logical_and(pred_arr1 == 0, ref_arr == 1))
+fn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 1))/np.sum(ref_arr)
 print("False negative rate of prokka: ", fn_1)
 
 acc_1 = acc(tp_1, fn_1, fp_1, fn_1)
