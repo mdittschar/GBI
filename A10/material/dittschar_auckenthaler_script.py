@@ -1,7 +1,7 @@
 from gff import gffParser
 import sys
 import getopt
-from mygff import myGffParser
+from dittschar_auckenthaler_mygff import myGffParser
 import numpy as np
 
 def acc(tp, tn, fp, fn):
