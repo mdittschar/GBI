@@ -30,5 +30,5 @@ class myGffParser():
                 attributes = dict(zip(keys, items))
                 df.loc[i, "attributes"] = [attributes]
         self.df = df
-
+        print(df)
         
