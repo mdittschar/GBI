@@ -33,32 +33,32 @@ ref = myGffParser(reference)
 
 pred_arr1 = np.zeros((6264404))
 for i in out.df.index:
-    pred_arr1[out.df["start"][i]:out.df["end"][i]] = 1
+    pred_arr1[out.df.loc[i, "start"]:out.df.loc[i, "end"]] = 1
 
 pred_arr2 = np.zeros((6264404))
 for i in out2.df.index:
-    pred_arr2[out2.df["start"][i]:out2.df["end"][i]] = 1
+    pred_arr2[out2.df["start"].loc[i]:out2.df["end"].loc[i]] = 1
 
 ref_arr = np.zeros((6264404))
-for i in out.df.index:
-    if ref.df["type"][i] == "CDS":
-        ref_arr[ref.df["start"][i]:ref.df["end"][i]] = 1
+for i in ref.df.index:
+    if ref.df.loc[i, "type"] == "CDS":
+        ref_arr[ref.df.loc[i, "start"]:ref.df.loc[i, "end"]] = 1
 
 
 
-tp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 1))/np.sum(ref_arr)
+tp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 1))#/np.sum(ref_arr)
 print("True positive rate of PROKKA: ", tp_1)
 
-tn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
+tn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 0))#/(len(ref_arr) - np.sum(ref_arr))
 print("True negative rate of PROKKA: ", tn_1)
 
-fp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
+fp_1 = np.sum(np.logical_and(pred_arr1 == 1, ref_arr == 0))#/(len(ref_arr) - np.sum(ref_arr))
 print("False positive rate of PROKKA: ", fp_1)#
 
-fn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 1))/np.sum(ref_arr)
+fn_1 = np.sum(np.logical_and(pred_arr1 == 0, ref_arr == 1))#/np.sum(ref_arr)
 print("False negative rate of PROKKA: ", fn_1)
 
-acc_1 = acc(tp_1, fn_1, fp_1, fn_1)
+acc_1 = acc(tp_1, tn_1, fp_1, fn_1)
 print("The accuracy of PROKKA is :", acc_1)
 
 sens_1 = sensitivity(tp_1, fn_1)
@@ -66,22 +66,22 @@ print("The sensitivity of PROKKA is: ", sens_1)
 
 spec_1 = specificity(tn_1, fp_1)
 print("The specificity of PROKKA is: ", spec_1)
+print(f"Total length is: {tp_1+tn_1+fp_1+fn_1}")
 print()
 
 # values for Genemark output
-tp_2 = np.sum(np.logical_and(pred_arr2 == 1, ref_arr == 1))/np.sum(ref_arr)
+tp_2 = np.sum(np.logical_and(pred_arr2 == 1, ref_arr == 1))#/np.sum(ref_arr)
 print("True positive rate of Genemark: ", tp_2)
 
-tn_2 = np.sum(np.logical_and(pred_arr2 == 0, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
+tn_2 = np.sum(np.logical_and(pred_arr2 == 0, ref_arr == 0))#/(len(ref_arr) - np.sum(ref_arr))
 print("True negative rate of Genemark: ", tn_2)
 
-fp_2 = np.sum(np.logical_and(pred_arr2 == 1, ref_arr == 0))/(len(ref_arr) - np.sum(ref_arr))
+fp_2 = np.sum(np.logical_and(pred_arr2 == 1, ref_arr == 0))#/(len(ref_arr) - np.sum(ref_arr))
 print("False positive rate of Genemark: ", fp_2)#
-
-fn_2 = np.sum(np.logical_and(pred_arr2 == 0, ref_arr == 1))/np.sum(ref_arr)
+fn_2 = np.sum(np.logical_and(pred_arr2 == 0, ref_arr == 1))#/np.sum(ref_arr)
 print("False negative rate of Genemark: ", fn_2)
 
-acc_2 = acc(tp_2, fn_2, fp_2, fn_2)
+acc_2 = acc(tp_2, tn_2, fp_2, fn_2)
 print("The accuracy of Genemark is :", acc_2)
 
 sens_2 = sensitivity(tp_2, fn_2)

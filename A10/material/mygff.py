@@ -20,7 +20,10 @@ class myGffParser():
                 df.loc[i, "score"] = record[5]
                 df.loc[i, "strand"] = record[6]
                 df.loc[i, "phase"] = record[7][0]
-                splitstring= record[7][1:].split("=")
+                if len(line.strip().split("\t")) == 8:
+                    splitstring= record[7][1:].split("=")
+                else:
+                    splitstring= record[8].split("=")
                 keys = []
                 items = []
                 for s in splitstring:
@@ -30,5 +33,6 @@ class myGffParser():
                 attributes = dict(zip(keys, items))
                 df.loc[i, "attributes"] = [attributes]
         self.df = df
-        print(df)
+        print(df["start"])
+        print(df["end"])
         
