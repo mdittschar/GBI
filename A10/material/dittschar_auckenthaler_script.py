@@ -44,9 +44,9 @@ for i in out.df.index:
         # consider both strands
         if out.df.loc[i, "strand"] == "-":
             # mark cds from index start to finish
-            pred_arr1_neg[out.df.loc[i, "start"]:out.df.loc[i, "end"]] = 1
+            pred_arr1_neg[out.df.loc[i, "start"]:out.df.loc[i, "end"]+1] = 1
         elif out.df.loc[i, "strand"] == "+":
-            pred_arr1_pos[out.df.loc[i, "start"]:out.df.loc[i, "end"]] = 1
+            pred_arr1_pos[out.df.loc[i, "start"]:out.df.loc[i, "end"]+1] = 1
 
 # initialise prediction arrays
 pred_arr2_neg = np.zeros((6264404))
@@ -56,9 +56,9 @@ for i in out2.df.index:
         # consider both strands
         if out2.df.loc[i, "strand"] == "-":
             # mark cds from index start to finish
-            pred_arr2_neg[out2.df.loc[i, "start"]:out2.df.loc[i, "end"]] = 1
+            pred_arr2_neg[out2.df.loc[i, "start"]:out2.df.loc[i, "end"]+1] = 1
         elif out2.df.loc[i, "strand"] == "+":
-            pred_arr2_pos[out2.df.loc[i, "start"]:out2.df.loc[i, "end"]] = 1
+            pred_arr2_pos[out2.df.loc[i, "start"]:out2.df.loc[i, "end"]+1] = 1
 
 # initialise prediction arrays
 ref_arr_neg = np.zeros((6264404))
@@ -68,9 +68,9 @@ for i in ref.df.index:
     if ref.df.loc[i, "type"] == "CDS":
         # consider both strands
         if ref.df.loc[i, "strand"] == "-":
-            ref_arr_neg[ref.df.loc[i, "start"]:ref.df.loc[i, "end"]] = 1
+            ref_arr_neg[ref.df.loc[i, "start"]:ref.df.loc[i, "end"]+1] = 1
         elif ref.df.loc[i, "strand"] == "+":
-            ref_arr_pos[ref.df.loc[i, "start"]:ref.df.loc[i, "end"]] = 1
+            ref_arr_pos[ref.df.loc[i, "start"]:ref.df.loc[i, "end"]+1] = 1
 
 
 
