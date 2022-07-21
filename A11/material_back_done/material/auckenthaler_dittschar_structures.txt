@@ -1,0 +1,6 @@
+>sequence1
+UCCAGCAGGAAAGC
+(((.().)))..()
+>sequence2
+CACGCUGAACGUACU
+((.())).(.(()))

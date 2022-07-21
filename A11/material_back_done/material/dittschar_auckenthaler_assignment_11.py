@@ -29,7 +29,6 @@ class Nussinov:
 
 
                 nmat[i,j] = np.max(np.array([itrow, itcol, itdiag, ititer]))
-
         return nmat
         
     def matrix_init(self, sequence):
@@ -47,7 +46,6 @@ def traceback(nmat, sequence, structure, i, L):
     sequence = list(sequence)
     j = L
     if i < j:
-        print(f"i is: {i}")
         if nmat[i,j] == nmat[i+1, j]:
             traceback(nmat, sequence, structure, i+1, j)
 
@@ -55,7 +53,6 @@ def traceback(nmat, sequence, structure, i, L):
             traceback(nmat, sequence, structure,i, j-1)
         elif nmat[i,j] == nmat[i+1, j-1] + canonical(sequence[i], sequence[j]):
             structure.append((i,j))
-            print("New pair: ", structure)
             traceback(nmat, sequence, structure,i+1, j-1)
 
         else:
@@ -115,16 +112,16 @@ def main():
     nuss = Nussinov()
     nmat = nuss.matrix_init(sequence)
     nmat = nuss.matrix_filling(sequence, nmat)
-    structure = []
+    structure = []#np.empty((0,2))
     structure = traceback(nmat, sequence, structure, 0, len(sequence)-1)
     dotbracketstring = dot_bracket(structure, sequence)
     print(dotbracketstring)
-    with open(f"auckenthaler_dittschar_sequence1.fx", "w") as f: 
-        f.write(">sequence1\n")        
+    with open(f"auckenthaler_dittschar_sequences.txt", "w") as f:   
+        f.write(">sequence1")
         f.write("".join(sequence)+"\n")
         f.write(dotbracketstring)
     sequence = fasta_read()[1]
-
+    print("Sequence12: ", sequence)
     nuss = Nussinov()
     nmat = nuss.matrix_init(sequence)
     nmat = nuss.matrix_filling(sequence, nmat)
@@ -133,8 +130,8 @@ def main():
     print(structure)
     dotbracketstring = dot_bracket(structure, sequence)
     print(dotbracketstring)
-    with open(f"auckenthaler_dittschar_sequence2.fx", "w") as f:    
-        f.write(">sequence1\n")     
+    with open(f"auckenthaler_dittschar_sequences.txt", "a") as f:         
+        f.write(">sequence2")
         f.write("".join(sequence)+"\n")
         f.write(dotbracketstring)
 

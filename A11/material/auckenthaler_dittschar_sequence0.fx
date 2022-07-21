@@ -1,3 +1,2 @@
->sequence1
 UCCAGCAGGAAAGC
 (((.().)))..()

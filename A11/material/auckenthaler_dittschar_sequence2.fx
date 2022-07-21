@@ -1,2 +1,3 @@
+>sequence1
 CACGCUGAACGUACU
 ((.())).(.(()))
