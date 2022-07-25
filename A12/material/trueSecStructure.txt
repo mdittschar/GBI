@@ -1,0 +1,27 @@
+REM                .         .         .         .         .               
+SEQ  1    SGFRKMAFPSGKVEGCMVQVTCGTTTLNGLWLDDVVYCPRHVICTSEDML   50          
+STR       CCCCCCCCCHHHHHHCEEEEEETTEEEEEEEETTEEEEEGGGGCTTTTTT               
+REM                                                                        
+REM                .         .         .         .         .               
+SEQ  51   NPNYEDLLIRKSNHNFLVQAGNVQLRVIGHSMQNCVLKLKVDTANPKTPK  100          
+STR       TTCHHHHHHHCCGGGEEEEETTEEECEEEEEEETTEEEEEECCCTTTTCC               
+REM                                                                        
+REM                .         .         .         .         .               
+SEQ  101  YKFVRIQPGQTFSVLACYNGSPSGVYQCAMRPNFTIKGSFLNGSCGSVGF  150          
+STR       EEECCCTTTEEEEEEEEETTEEEEEEEEEEETTTEECCCCTTTTTTEEEE               
+REM                                                                        
+REM                .         .         .         .         .               
+SEQ  151  NIDYDCVSFCYMHHMELPTGVHAGTDLEGNFYGPFVDRQTAQAAGTDTTI  200          
+STR       EETTTTEEEEEEEEEETTTTCEEEETTTTCBCCCCTTTTTCCCCCCCCBC               
+REM                                                                        
+REM                .         .         .         .         .               
+SEQ  201  TVNVLAWLYAAVINGDRWFLNRFTTTLNDFNLVAMKYNYEPLTQDHVDIL  250          
+STR       HHHHHHHHHHHHHHCCTTTTCCCCCCHHHHHHHHHHHCBCCCCHHHHHHH               
+REM                                                                        
+REM                .         .         .         .         .               
+SEQ  251  GPLSAQTGIAVLDMCASLKELLQNGMNGRTILGSALLEDEFTPFDVVRQC  300          
+STR       HHHHHHHCCCHHHHHHHHHHHHHHCTTTTTBTTBCCCCCCCCHHHHHHHH               
+REM                                                                        
+REM                                                                        
+SEQ  301  SGVTFQ                                              306          
+STR       HCCCCC                                                           
