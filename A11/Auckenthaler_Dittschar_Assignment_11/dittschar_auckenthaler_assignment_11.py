@@ -103,16 +103,19 @@ def fasta_read():
                 se = record.seq
                 # get sequences
                 ses[i] = str(se)
-
                 i = i + 1
     return ses
 
+
+
 def main():
+    # first sequence
     sequence = fasta_read()[0]
+    print(f"Sequence: {sequence}")
     nuss = Nussinov()
     nmat = nuss.matrix_init(sequence)
     nmat = nuss.matrix_filling(sequence, nmat)
-    structure = []#np.empty((0,2))
+    structure = []
     structure = traceback(nmat, sequence, structure, 0, len(sequence)-1)
     dotbracketstring = dot_bracket(structure, sequence)
     print(dotbracketstring)
@@ -120,8 +123,10 @@ def main():
         f.write(">sequence1")
         f.write("".join(sequence)+"\n")
         f.write(dotbracketstring)
+
+    # second sequence
     sequence = fasta_read()[1]
-    print("Sequence12: ", sequence)
+    print(f"Sequence: {sequence}")
     nuss = Nussinov()
     nmat = nuss.matrix_init(sequence)
     nmat = nuss.matrix_filling(sequence, nmat)
@@ -131,7 +136,7 @@ def main():
     dotbracketstring = dot_bracket(structure, sequence)
     print(dotbracketstring)
     with open(f"auckenthaler_dittschar_sequences.txt", "a") as f:         
-        f.write(">sequence2")
+        f.write("\n>sequence2")
         f.write("".join(sequence)+"\n")
         f.write(dotbracketstring)
 
